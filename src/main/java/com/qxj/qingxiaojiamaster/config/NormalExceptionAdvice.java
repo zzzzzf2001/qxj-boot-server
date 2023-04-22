@@ -1,7 +1,7 @@
 package com.qxj.qingxiaojiamaster.config;
 
 import com.qxj.qingxiaojiamaster.common.R;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @since : 2023/4/22 09:32
  **/
 
-@Configuration
+@ControllerAdvice
 public class NormalExceptionAdvice {
     @ResponseBody
     @ExceptionHandler(NormalException.class)

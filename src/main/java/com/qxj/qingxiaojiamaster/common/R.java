@@ -14,10 +14,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class R<T> {
+public class R {
     private String code;
     private String msg;
-    private T data;
+    private Object data;
 
     // 不需要返回值
     public static R success() {
@@ -27,6 +27,10 @@ public class R<T> {
     // 需要返回值
     public static R success(Object data) {
         return new R(Constants.CODE_200, "", data);
+    }
+
+    public static R success(String msg, Object data) {
+        return new R(Constants.CODE_200, msg, data);
     }
 
     // 需要返回状态

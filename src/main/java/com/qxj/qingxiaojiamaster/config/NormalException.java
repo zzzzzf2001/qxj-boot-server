@@ -12,7 +12,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NormalException extends RuntimeException {
-    private Integer code;
+    //默认错误代码500
+    private Integer code = 500;
     private String Message;
 
     public NormalException() {

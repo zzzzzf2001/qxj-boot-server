@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/admin/leave")
 public class LeaveReviewController {
     /*
-       搜索请假信息      /select (条件查询,分页查询)
+       搜索请假信息      /select (条件查询,分页查询
        修改请假信息      /modify
        删除请假信息      /delete
        审核请假信息      /audit
