@@ -28,6 +28,13 @@ public class AdminController {
     @Resource
     AdminService adminService;
 
+    /**
+     * @param admin
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 管路员用户登录
+     * @author hasdsd
+     * @Date 2023/4/22
+     */
     @PostMapping("/login")
     public R Login(@RequestBody Admin admin) {
         Admin result = adminService.lambdaQuery().eq(Admin::getNumber, admin.getNumber()).one();
