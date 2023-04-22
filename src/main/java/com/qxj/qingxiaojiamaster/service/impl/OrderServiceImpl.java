@@ -63,9 +63,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public List<LeaveCommitDto> selectAllOrderInfo(int id) {
-        //List<Order> orders = orderMapper.selectOrderByUserID(id);
-        //        LeaveCommitDto leaveCommitDto = new LeaveCommitDto();
-        //        BeanUtils.copyProperties(orders,leaveCommitDto);
         List<LeaveCommitDto> orderAll = new ArrayList<>();
         List<Order> orders = orderMapper.selectOrderByUserID(id);
         for(Order order:orders){
