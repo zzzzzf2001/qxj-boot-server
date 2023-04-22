@@ -4,6 +4,8 @@ import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -18,4 +20,6 @@ public interface OrderStatusMapper extends BaseMapper<OrderStatus> {
     boolean setStatusNew(int id);
 
     OrderStatus getStatusByorderID(int id);
+
+    List<Integer> selectOrderidByStatus(int status);
 }

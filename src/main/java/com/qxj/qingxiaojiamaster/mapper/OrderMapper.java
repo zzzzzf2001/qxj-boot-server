@@ -4,8 +4,10 @@ import com.qxj.qingxiaojiamaster.entity.Order;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qxj.qingxiaojiamaster.entity.User;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -18,8 +20,5 @@ import java.util.List;
 @Mapper
 public interface OrderMapper extends BaseMapper<Order> {
 
-    List<Order> selectOrderByUserID(int id);
-
-
-
+    List<Order> selectOrderByUserID(@Param("map") Map<String, Object> map);
 }

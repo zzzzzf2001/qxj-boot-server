@@ -1,17 +1,16 @@
 package com.qxj.qingxiaojiamaster.web.client;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+
 import com.qxj.qingxiaojiamaster.common.Constants;
+import com.qxj.qingxiaojiamaster.common.PageParams;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Order;
-import com.qxj.qingxiaojiamaster.entity.User;
+
 import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
-import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.qxj.qingxiaojiamaster.service.UserService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,9 +34,10 @@ public class LeaveController {
     OrderService orderService;
 
 @Resource
-    OrderMapper orderMapper;
-@Resource
     OrderStatusService orderStatusService;
+
+@Resource
+    OrderStatusMapper orderStatusMapper;
 
 /**
  *
@@ -71,11 +71,9 @@ public class LeaveController {
      */
 
     @PostMapping("/selectAll")
-    public R selectALl(int id){
-        List<LeaveCommitDto> leaveCommitDtos = orderService.selectAllOrderInfo(id);
-
-
-        return  R.success(leaveCommitDtos);
+    public R selectALl(PageParams pageParams,int id){
+        List<Order> orders = orderService.selectAllOrderInfo(pageParams,id);
+        return  R.success(orders);
     }
 
 
@@ -91,6 +89,19 @@ public class LeaveController {
         }
         return R.error();
     }
+    /**
+     *
+     * 查询请假记录
+     *
+     */
+    @GetMapping("/showLeave/{status}")
+    public R showOrder(PageParams pageParams,
+            @PathVariable("status") int status){
+        return orderService.selectOrderByStatus(pageParams,status);
+    }
+
+
+
 
 
 

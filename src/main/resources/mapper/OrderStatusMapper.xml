@@ -19,4 +19,8 @@
     <select id="getStatusByorderID" resultType="com.qxj.qingxiaojiamaster.entity.OrderStatus">
         select * from order_status where order_id= #{id}
     </select>
-</mapper>
+
+    <select id="selectOrderidByStatus" resultType="java.lang.Integer" parameterType="int">
+        select  order_id from order_status where status=#{id}
+    </select>
+
