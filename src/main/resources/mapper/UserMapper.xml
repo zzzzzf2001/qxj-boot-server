@@ -4,16 +4,36 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.qxj.qingxiaojiamaster.entity.User">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="number" property="number" />
-        <result column="password" property="password" />
-        <result column="crate_time" property="crateTime" />
-        <result column="phone" property="phone" />
-        <result column="emergency_phone" property="emergencyPhone" />
-        <result column="class_id" property="classId" />
-        <result column="status" property="status" />
-        <result column="Remarks" property="remarks" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="number" property="number"/>
+        <result column="password" property="password"/>
+        <result column="crate_time" property="crateTime"/>
+        <result column="phone" property="phone"/>
+        <result column="emergency_phone" property="emergencyPhone"/>
+        <result column="class_id" property="classId"/>
+        <result column="status" property="status"/>
+        <result column="Remarks" property="remarks"/>
     </resultMap>
+
+    <resultMap id="detailsResultMap" type="map">
+        <!--    这里是外加的    -->
+        <result column="grade" property="grade"/>
+        <result column="class" property="class"/>
+        <result column="major" property="major"/>
+        <result column="college" property="college"/>
+    </resultMap>
+
+    <select id="selectOtherUserInfo" resultType="java.util.Map" resultMap="detailsResultMap">
+        select grade.name as grade, class.name as class, major.name as major, college.name as college
+        from class,
+             grade,
+             major,
+             college
+        where class.id = #{classId}
+          and grade.id = class.grade_id
+          and major.id = class.major_id
+          and major.college_id = college.id
+    </select>
 
 </mapper>
