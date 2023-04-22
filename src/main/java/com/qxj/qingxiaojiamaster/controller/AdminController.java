@@ -5,6 +5,7 @@ import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.service.AdminService;
+import com.qxj.qingxiaojiamaster.utils.LoginUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -38,12 +39,12 @@ public class AdminController {
     @PostMapping("/login")
     public R Login(@RequestBody Admin admin) {
         Admin result = adminService.lambdaQuery().eq(Admin::getNumber, admin.getNumber()).one();
+        
         if (result == null) {
             throw new NormalException("账号不存在");
         }
-        if (!result.getPassword().equals(admin.getPassword())) {
-            throw new NormalException("密码错误");
-        }
+
+        LoginUtil.checkAccount(admin.getPassword(), result.getPassword());
         result.setPassword("");//除去密码返回
         return R.success("登录成功", result);
     }
