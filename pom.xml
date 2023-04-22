@@ -95,7 +95,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>com.qxj.qingxiaojiamaster.QxjBoot123Application</mainClass>
+                    <mainClass>com.qxj.qingxiaojiamaster.QxjBootApplication</mainClass>
                     <skip>true</skip>
                 </configuration>
                 <executions>

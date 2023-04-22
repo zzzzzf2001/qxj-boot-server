@@ -13,24 +13,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class LeaveController {
 
-
-    //查询学生本人信息（用于请假 ）
-
-
-    //提交证明材料
-
-
-
-    //提交请假信息
-
-
-    //销假
-
-    //修改假条信息（只可去往地，开始时间，结束时间）
-
-
-    //查询请假记录（审批状态，销假状态）
-
-    //取消请假
-
+    /**
+    查询学生本人信息（用于请假 ）
+    提交证明材料
+    提交请假信息
+    销假
+    修改假条信息（只可去往地，开始时间，结束时间）
+    查询请假记录（审批状态，销假状态）
+    取消请假
+        **/
 }
