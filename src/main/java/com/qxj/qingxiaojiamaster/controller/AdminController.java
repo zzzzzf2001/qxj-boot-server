@@ -44,7 +44,7 @@ public class AdminController {
         if (!result.getPassword().equals(admin.getPassword())) {
             throw new NormalException("密码错误");
         }
-        result.setPassword("");
+        result.setPassword("");//除去密码返回
         return R.success("登录成功", result);
     }
 }
