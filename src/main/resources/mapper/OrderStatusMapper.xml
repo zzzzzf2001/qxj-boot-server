@@ -11,5 +11,12 @@
         <result column="user_id" property="userId" />
         <result column="img_url" property="imgUrl" />
     </resultMap>
-
+    <update id="setStatusNew" parameterType="int" >
+        update order_status
+        set status = 4
+        where order_id=#{id};
+    </update>
+    <select id="getStatusByorderID" resultType="com.qxj.qingxiaojiamaster.entity.OrderStatus">
+        select * from order_status where order_id= #{id}
+    </select>
 </mapper>

@@ -31,7 +31,18 @@ public class OrderStatus implements Serializable {
     private Integer orderId;
 
     @TableField("status")
+    /**
+     * 审核中        1
+     * 审核通过      2
+     * 审核未通过    3
+     * 销假中       4
+     * 销假未通过    5
+     * 销假审核超时  6
+     * 已销假       7
+     * 审核超时      8
+     **/
     private Integer status;
+
 
     @TableField("create_time")
     private LocalDateTime createTime;

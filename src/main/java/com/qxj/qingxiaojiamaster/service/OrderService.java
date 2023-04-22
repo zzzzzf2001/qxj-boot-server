@@ -2,6 +2,9 @@ package com.qxj.qingxiaojiamaster.service;
 
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrderService extends IService<Order> {
 
+    boolean LeaveCommit(LeaveCommitDto leaveCommitDto);
+
+    List<LeaveCommitDto> selectAllOrderInfo(int id);
 }

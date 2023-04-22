@@ -2,6 +2,7 @@ package com.qxj.qingxiaojiamaster.service;
 
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 
 /**
  * <p>

@@ -16,4 +16,9 @@
         <result column="img_url" property="imgUrl" />
     </resultMap>
 
+
+    <select id="selectOrderByUserID" resultType="com.qxj.qingxiaojiamaster.entity.Order" parameterType="int">
+        select * from order   where user_id= #{id};
+    </select>
+
 </mapper>

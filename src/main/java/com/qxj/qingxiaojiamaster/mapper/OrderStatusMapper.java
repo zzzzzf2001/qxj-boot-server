@@ -15,4 +15,7 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface OrderStatusMapper extends BaseMapper<OrderStatus> {
 
+    boolean setStatusNew(int id);
+
+    OrderStatus getStatusByorderID(int id);
 }

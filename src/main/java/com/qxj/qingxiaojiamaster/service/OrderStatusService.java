@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface OrderStatusService extends IService<OrderStatus> {
 
+    boolean cancelLeave(int id);
 }
