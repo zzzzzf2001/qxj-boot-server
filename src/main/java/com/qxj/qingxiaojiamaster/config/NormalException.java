@@ -35,9 +35,16 @@ public class NormalException extends RuntimeException {
     }
 
     //错误信息只在后台展示
-    public NormalException(String msg, String debugInfo) {
+    public NormalException(String msg, Exception e) {
         super();
         this.Message = msg;
-        this.debugInfo = debugInfo;
+        this.debugInfo = e.toString();
+    }
+
+    public NormalException(Integer code, String msg, Exception e) {
+        super();
+        this.code = code;
+        this.Message = msg;
+        this.debugInfo = e.toString();
     }
 }

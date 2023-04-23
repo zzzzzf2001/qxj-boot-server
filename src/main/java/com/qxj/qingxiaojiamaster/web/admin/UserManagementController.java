@@ -69,7 +69,7 @@ public class UserManagementController {
             user.setCrateTime(LocalDateTime.now());
             userService.save(user);
         } catch (Exception e) {
-            throw new NormalException("新增用户错误", e.toString());
+            throw new NormalException("新增用户错误", e);
         }
         return R.success("操作成功");
     }
