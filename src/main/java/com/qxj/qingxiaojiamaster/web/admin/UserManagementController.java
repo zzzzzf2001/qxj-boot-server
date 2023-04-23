@@ -71,9 +71,40 @@ public class UserManagementController {
         } catch (Exception e) {
             throw new NormalException("新增用户错误", e);
         }
-        return R.success("操作成功");
+        return R.success();
     }
 
+
+    /**
+     * @param userId
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 软删除用户
+     * @author hasdsd
+     * @Date 2023/4/23
+     */
+    @DeleteMapping()
+    public R deleteUser(@RequestParam("userId") Integer userId) {
+        userService.updateById(User.builder().id(userId).enable(0).build());
+        return R.success();
+    }
+
+
+    /**
+     * @param user
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 修改用户信息
+     * @author hasdsd
+     * @Date 2023/4/23
+     */
+    @PutMapping()
+    public R updateInfo(@RequestBody User user) {
+        try {
+            userService.updateById(user);
+        } catch (Exception e) {
+            throw new NormalException("修改失败", e);
+        }
+        return R.success();
+    }
 
     /**
      * @param currentPage, pageSize

@@ -55,5 +55,8 @@ public class User implements Serializable {
     @TableField("Remarks")
     private String remarks;
 
+    @TableId("enable")
+    private Integer enable;
+
 
 }
