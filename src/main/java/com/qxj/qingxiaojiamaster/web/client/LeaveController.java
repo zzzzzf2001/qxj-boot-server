@@ -70,22 +70,9 @@ public class LeaveController {
 
 
     /**
-     * 列出所有请假表
-     */
-
-    @GetMapping("/selectAll/{id}")
-    public R selectALl(PageParams pageParams,@PathVariable("id") int id){
-        List<Order> orders = orderService.selectAllOrderInfo(pageParams,id);
-        return  R.success(orders);
-    }
-
-
-
-
-    /**
      * @param id
      * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 请求销假
+     * @Description 请求销假表
      * @author 15754
      * @Date 2023/4/23
      */
