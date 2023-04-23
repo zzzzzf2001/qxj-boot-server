@@ -54,8 +54,8 @@ public class LeaveController {
      参数: LeaveCommitDto
     **/
     @Transactional
-    @PostMapping("/commit/{leaveCommitDto}")
-    public R LeaveCommit(@PathVariable("leaveCommitDto") LeaveCommitDto  leaveCommitDto){
+    @PostMapping("/commit")
+    public R LeaveCommit(@RequestBody LeaveCommitDto  leaveCommitDto){
         boolean save = orderService.LeaveCommit(leaveCommitDto);
 
         if (save) {
@@ -66,29 +66,37 @@ public class LeaveController {
         }
 
     }
+
+
     /**
      * 列出所有请假表
      */
 
-    @PostMapping("/selectAll")
-    public R selectALl(PageParams pageParams,int id){
+    @GetMapping("/selectAll/{id}")
+    public R selectALl(@RequestBody PageParams pageParams,int id){
         List<Order> orders = orderService.selectAllOrderInfo(pageParams,id);
         return  R.success(orders);
     }
+
+
 
 
     /**
     销假
      根据假条ID销假
      **/
-    @PostMapping("/cancel")
-    public R  cancelLeave(int id){
+    @GetMapping("/cancel/{id}")
+    public R  cancelLeave(@PathVariable("id") int id){
         boolean result = orderStatusService.cancelLeave(id);
         if (result==true){
         return R.success();
         }
         return R.error();
     }
+
+
+
+
     /**
      *
      * 查询请假记录
