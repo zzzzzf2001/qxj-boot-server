@@ -24,14 +24,14 @@ import lombok.ToString;
 public class PageParams {
 
     //页码
-    private int PageNo=1;
+    private int CurrentPage=1;
     //每页显示记录数
     private int PageSize=10;
 
     public PageParams(){}
 
-    public PageParams(int  pageNo, int pageSize) {
-        PageNo = pageNo;
+    public PageParams(int  CurrentPage, int pageSize) {
+        CurrentPage = CurrentPage;
         PageSize = pageSize;
     }
 }

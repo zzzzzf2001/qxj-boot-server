@@ -17,7 +17,7 @@
     </resultMap>
     <select id="selectOrderByUserID" resultType="com.qxj.qingxiaojiamaster.entity.Order" parameterType="map">
         select * from   order where user_id = #{map.userId}
-        limit #{map.pageNo},#{map.pageNum}
+        limit #{map.CurrentPage},#{map.PageSize}
     </select>
 
 
