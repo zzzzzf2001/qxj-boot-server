@@ -103,7 +103,7 @@ public class LeaveController {
      *
      */
     @GetMapping("/showLeave/{status}")
-    public R showOrder(PageParams pageParams,
+    public R showOrder(@RequestBody PageParams pageParams,
             @PathVariable("status") int status){
         return orderService.selectOrderByStatus(pageParams,status);
     }
