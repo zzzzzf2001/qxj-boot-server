@@ -17,7 +17,7 @@ import java.util.List;
 @Mapper
 public interface OrderStatusMapper extends BaseMapper<OrderStatus> {
 
-    boolean setStatusNew(int id);
+    boolean setStatusNew(int id,int status);
 
     OrderStatus getStatusByorderID(int id);
 

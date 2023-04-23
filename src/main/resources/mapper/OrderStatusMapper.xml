@@ -13,7 +13,7 @@
     </resultMap>
     <update id="setStatusNew" parameterType="int">
         update order_status
-        set status = 4
+        set status = #{status}
         where order_id = #{id};
     </update>
     <select id="getStatusByorderID" resultType="com.qxj.qingxiaojiamaster.entity.OrderStatus">

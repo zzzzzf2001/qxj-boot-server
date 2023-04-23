@@ -24,8 +24,16 @@ public class OrderStatusServiceImpl extends ServiceImpl<OrderStatusMapper, Order
     OrderStatusMapper orderStatusMapper;
 
     @Override
+    public boolean backLeave(int id) {
+        int status=4;
+        boolean result = orderStatusMapper.setStatusNew(id,status);
+        return result;
+    }
+
+    @Override
     public boolean cancelLeave(int id) {
-        boolean result = orderStatusMapper.setStatusNew(id);
+        int status=9;
+        boolean result = orderStatusMapper.setStatusNew(id,status);
         return result;
     }
 }

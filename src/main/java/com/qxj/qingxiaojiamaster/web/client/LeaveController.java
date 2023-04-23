@@ -1,12 +1,9 @@
 package com.qxj.qingxiaojiamaster.web.client;
 
 
-import com.qxj.qingxiaojiamaster.common.Constants;
-import com.qxj.qingxiaojiamaster.common.PageParams;
+
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
-import com.qxj.qingxiaojiamaster.entity.Order;
-
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
@@ -17,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
+
 
 /**
  * @author : 15754
@@ -81,13 +78,16 @@ public class LeaveController {
      * @Date 2023/4/23
      */
     @Transactional
-    @GetMapping("/cancel/{id}")
-    public R  cancelLeave(@PathVariable("id") int id){
-        boolean result = orderStatusService.cancelLeave(id);
-        if (result==true){
-        return R.success();
-        }
-        return R.error();
+    @GetMapping("/back/{id}")
+    public R  backLeave(@PathVariable("id") int id){
+
+       try {
+           orderStatusService.backLeave(id);
+       }
+       catch (Exception e){
+           throw new NormalException("销假请求发送失败",e);
+       }
+       return R.success();
     }
 
 
@@ -110,9 +110,22 @@ public class LeaveController {
     }
 
     /**
-    取消请假
-     **/
-
+     * @param id
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 请求销假
+     * @author 15754
+     * @Date 2023/4/23
+     */
+    @GetMapping("/cancel/{id}")
+    public R cancelLeave(@PathVariable("id") int id){
+        try {
+            orderStatusService.cancelLeave(id);
+        }
+        catch (Exception e){
+            throw new NormalException("取消请假发送失败",e);
+        }
+        return R.success();
+    }
 
 
 
@@ -122,12 +135,4 @@ public class LeaveController {
 
 
 
-
-
-
-
-     /**
-     查询请假记录（审批状态，销假状态）
-
-        **/
 }
