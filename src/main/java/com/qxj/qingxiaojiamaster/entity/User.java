@@ -1,5 +1,6 @@
 package com.qxj.qingxiaojiamaster.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -26,7 +27,7 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @TableField("name")
@@ -55,7 +56,7 @@ public class User implements Serializable {
     @TableField("Remarks")
     private String remarks;
 
-    @TableId("enable")
+    @TableField("enable")
     private Integer enable;
 
 

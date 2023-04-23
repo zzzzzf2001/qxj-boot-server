@@ -7,6 +7,7 @@ import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.service.AdminService;
 import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,6 +22,7 @@ import java.util.List;
  **/
 
 @RestController
+@Slf4j
 @RequestMapping("/admin/user")
 public class UserManagementController {
     /**
@@ -46,13 +48,25 @@ public class UserManagementController {
      * @Description 获取全部学生信息
      * @author hasdsd
      * @Date 2023/4/23
+     * TODO:查出来的结果问题
      */
     @GetMapping()
     public R getUserInfo(
             @RequestParam("currentPage") Integer currentPage,
-            @RequestParam("pageSize") Integer pageSize
+            @RequestParam("pageSize") Integer pageSize,
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "number", required = false) String number,
+            @RequestParam(value = "classId", required = false) String[] classId,
+            @RequestParam(value = "enable", required = false) String enable
     ) {
-        List<User> list = userService.lambdaQuery().last(MybatisUtil.limitPage(currentPage, pageSize)).list();
+        List<User> list = userService
+                .lambdaQuery()
+                .like(MybatisUtil.condition(username), User::getName, username)
+                .like(MybatisUtil.condition(number), User::getNumber, number)
+                .like(MybatisUtil.condition(enable), User::getEnable, enable)
+                .in(MybatisUtil.condition(classId), User::getClassId, MybatisUtil.handleArray(classId))
+                .last(MybatisUtil.limitPage(currentPage, pageSize))
+                .list();
         return R.success(list);
     }
 
