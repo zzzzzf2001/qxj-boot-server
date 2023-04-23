@@ -4,6 +4,7 @@ package com.qxj.qingxiaojiamaster.web.client;
 import com.qxj.qingxiaojiamaster.common.Constants;
 import com.qxj.qingxiaojiamaster.common.PageParams;
 import com.qxj.qingxiaojiamaster.common.R;
+import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Order;
 
 import com.qxj.qingxiaojiamaster.entity.User;
@@ -51,28 +52,31 @@ public class LeaveController {
 
 
     /**
-     提交请假信息
-     参数: LeaveCommitDto
-    **/
+     * @param leaveCommitDto
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 请求销假
+     * @author 15754
+     * @Date 2023/4/23
+     */
     @Transactional
     @PostMapping("/commit")
     public R LeaveCommit(@RequestBody LeaveCommitDto  leaveCommitDto){
-        boolean save = orderService.LeaveCommit(leaveCommitDto);
 
-        if (save) {
-            return R.success("提交成功");
-        }
-        else {
-            return R.error(Constants.CODE_400,"提交失败，请重试");
-        }
 
+        try{
+            orderService.LeaveCommit(leaveCommitDto);
+        }
+        catch (Exception e){
+            throw new NormalException("添加失败",e);
+        }
+        return R.success("添加成功");
     }
 
 
     /**
      * @param id
      * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 请求销假表
+     * @Description 请求销假
      * @author 15754
      * @Date 2023/4/23
      */
