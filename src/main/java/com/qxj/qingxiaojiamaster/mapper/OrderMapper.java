@@ -19,6 +19,4 @@ import java.util.Map;
  */
 @Mapper
 public interface OrderMapper extends BaseMapper<Order> {
-
-    List<Order> selectOrderByUserID(@Param("map") Map<String, Object> map);
 }

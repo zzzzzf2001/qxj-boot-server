@@ -3,8 +3,8 @@ package com.qxj.qingxiaojiamaster.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Setter;
-import lombok.Getter;
+import lombok.*;
+
 import java.io.Serializable;
 
 
@@ -16,8 +16,9 @@ import java.io.Serializable;
  * @author 张锋
  * @since 2023-04-22
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("grade")
 public class Grade implements Serializable {
 

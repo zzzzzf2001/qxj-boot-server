@@ -4,6 +4,7 @@ import com.qxj.qingxiaojiamaster.common.PageParams;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 
 import java.util.List;
@@ -20,8 +21,6 @@ public interface OrderService extends IService<Order> {
 
     boolean LeaveCommit(LeaveCommitDto leaveCommitDto);
 
-    List<Order> selectAllOrderInfo(PageParams pageParams,int id);
+    R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
 
-
-    R selectOrderByStatus(PageParams pageParams, int status);
 }

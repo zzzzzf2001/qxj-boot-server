@@ -6,6 +6,7 @@ import com.qxj.qingxiaojiamaster.common.PageParams;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Order;
 
+import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
@@ -73,7 +74,7 @@ public class LeaveController {
      */
 
     @GetMapping("/selectAll/{id}")
-    public R selectALl(@RequestBody PageParams pageParams,int id){
+    public R selectALl(PageParams pageParams,@PathVariable("id") int id){
         List<Order> orders = orderService.selectAllOrderInfo(pageParams,id);
         return  R.success(orders);
     }
@@ -82,9 +83,13 @@ public class LeaveController {
 
 
     /**
-    销假
-     根据假条ID销假
-     **/
+     * @param id
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 请求销假
+     * @author 15754
+     * @Date 2023/4/23
+     */
+    @Transactional
     @GetMapping("/cancel/{id}")
     public R  cancelLeave(@PathVariable("id") int id){
         boolean result = orderStatusService.cancelLeave(id);
@@ -98,25 +103,40 @@ public class LeaveController {
 
 
     /**
-     *
-     * 查询请假记录
-     *
+     * @param user, pageSize,currentPage,status
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 查询所有请假表
+     * @author 15754
+     * @Date 2023/4/23
      */
     @GetMapping("/showLeave/{status}")
-    public R showOrder(@RequestBody PageParams pageParams,
-            @PathVariable("status") int status){
-        return orderService.selectOrderByStatus(pageParams,status);
+    public R showOrder( @RequestBody User user,
+                        @RequestParam("currentPage") Integer currentPage,
+                        @RequestParam("pageSize") Integer pageSize,
+                        @PathVariable("status") int status){
+
+        return orderService.selectOrderByStatus(user,currentPage,pageSize,status);
     }
 
-
-
+    /**
+    取消请假
+     **/
 
 
 
 
     /**
     修改假条信息（只可去往地，开始时间，结束时间）
-    查询请假记录（审批状态，销假状态）
-    取消请假
+     **/
+
+
+
+
+
+
+
+     /**
+     查询请假记录（审批状态，销假状态）
+
         **/
 }

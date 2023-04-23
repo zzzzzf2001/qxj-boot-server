@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * <p>
@@ -17,8 +16,9 @@ import lombok.Setter;
  * @author 张锋
  * @since 2023-04-22
  */
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("order_status")
 public class OrderStatus implements Serializable {
 
@@ -39,7 +39,8 @@ public class OrderStatus implements Serializable {
      * 销假未通过    5
      * 销假审核超时  6
      * 已销假       7
-     * 审核超时      8
+     * 审核超时     8
+     * 已取消       9
      **/
     private Integer status;
 

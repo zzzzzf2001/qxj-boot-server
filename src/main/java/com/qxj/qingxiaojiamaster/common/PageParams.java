@@ -30,8 +30,8 @@ public class PageParams {
 
     public PageParams(){}
 
-    public PageParams(int  CurrentPage, int pageSize) {
-        CurrentPage = CurrentPage;
+    public PageParams(int  currentPage, int pageSize) {
+        CurrentPage = currentPage;
         PageSize = pageSize;
     }
 }

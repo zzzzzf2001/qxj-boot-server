@@ -7,17 +7,20 @@ import com.qxj.qingxiaojiamaster.common.PageParams;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
+import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
+import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +41,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     OrderStatusService orderStatusService;
     @Resource
     OrderStatusMapper orderStatusMapper;
-
+    @Resource
+    OrderService orderService;
 
     @Override
 
@@ -69,33 +73,44 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 
-    //列出所有假条
+
+//    @Override
+//    public R selectOrderByStatus(PageParams pageParams, int status) {
+//        //通过请假单状态找到所有请假表的ID
+//        List<Integer> orderids = orderStatusMapper.selectOrderidByStatus(status);
+//        //创建条件查询器
+//        LambdaQueryWrapper<Order> queryWrapper=new LambdaQueryWrapper<>();
+//        //添加查询条件 倘若id为空，则会直接查询 ，不为空就按条件查询 orderid in (orderids)
+//        queryWrapper.in(!orderids.isEmpty(),Order::getId,orderids);
+//        //分页查询，创建分页类
+//        Page<Order> page = new Page<Order>(pageParams.getCurrentPage(),pageParams.getPageSize());
+//        //分页查询返回页结果
+//        Page<Order> orderPage1 = orderMapper.selectPage(page, queryWrapper);
+//        return R.success(orderPage1);
+//    }
+
     @Override
-    public List<Order> selectAllOrderInfo(PageParams pageParams,int id) {
-        //创建Map 将查询条件插入其中
-        Map<String,Object> map=new HashMap<>();
-        map.put("userId",id); //用户ID
-        map.put("CurrentPage",pageParams.getCurrentPage()); //页号
-        map.put("PageSize",pageParams.getPageSize()); //页大小
-        return orderMapper.selectOrderByUserID(map);
-    }
+    public R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status) {
+        //利用条件查询其状态对象 参数为该用户的状态以及用户ID
+        List<OrderStatus> list = orderStatusService.lambdaQuery()
+                .eq(OrderStatus::getUserId, user.getId())
+                .eq(StringUtils.isNotBlank(String.valueOf(status)), OrderStatus::getStatus, status)
+                .list();
+        //将请假条ID从状态集合中取出，并封装到数组中
+        List<Integer> orderIds=new ArrayList<>();
+        for(OrderStatus orderStatus:list){
+            Integer orderId = orderStatus.getOrderId();
+            if (orderIds.contains(orderId))
+                orderIds.add(orderId);
+        }
+        //根据请假条ID查询假条集合
+        List<Order> orders = orderService.lambdaQuery()
+                .in(Order::getId, orderIds)
+                .last(MybatisUtil.limitPage(currentPage, pageSize))
+                .list();
 
+        return R.success(orders);
 
-
-
-    @Override
-    public R selectOrderByStatus(PageParams pageParams, int status) {
-        //通过请假单状态找到所有请假表的ID
-        List<Integer> orderids = orderStatusMapper.selectOrderidByStatus(status);
-        //创建条件查询器
-        LambdaQueryWrapper<Order> queryWrapper=new LambdaQueryWrapper<>();
-        //添加查询条件 倘若id为空，则会直接查询 ，不为空就按条件查询 orderid in (orderids)
-        queryWrapper.in(!orderids.isEmpty(),Order::getId,orderids);
-        //分页查询，创建分页类
-        Page<Order> page = new Page<Order>(pageParams.getCurrentPage(),pageParams.getPageSize());
-        //分页查询返回页结果
-        Page<Order> orderPage1 = orderMapper.selectPage(page, queryWrapper);
-        return R.success(orderPage1);
     }
 
 }

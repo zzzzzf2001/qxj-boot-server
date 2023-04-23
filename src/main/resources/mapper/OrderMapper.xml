@@ -15,10 +15,6 @@
         <result column="create_time" property="createTime" />
         <result column="img_url" property="imgUrl" />
     </resultMap>
-    <select id="selectOrderByUserID" resultType="com.qxj.qingxiaojiamaster.entity.Order" parameterType="map">
-        select * from   order where user_id = #{map.userId}
-        limit #{map.CurrentPage},#{map.PageSize}
-    </select>
 
 
 </mapper>
