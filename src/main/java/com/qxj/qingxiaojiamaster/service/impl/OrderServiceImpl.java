@@ -75,8 +75,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //创建Map 将查询条件插入其中
         Map<String,Object> map=new HashMap<>();
         map.put("userId",id); //用户ID
-        map.put("pageNo",pageParams.getPageNo()); //页号
-        map.put("pageNum",pageParams.getPageSize()); //页大小
+        map.put("CurrentPage",pageParams.getCurrentPage()); //页号
+        map.put("PageSize",pageParams.getPageSize()); //页大小
         return orderMapper.selectOrderByUserID(map);
     }
 
@@ -92,7 +92,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //添加查询条件 倘若id为空，则会直接查询 ，不为空就按条件查询 orderid in (orderids)
         queryWrapper.in(!orderids.isEmpty(),Order::getId,orderids);
         //分页查询，创建分页类
-        Page<Order> page = new Page<Order>(pageParams.getPageNo(),pageParams.getPageSize());
+        Page<Order> page = new Page<Order>(pageParams.getCurrentPage(),pageParams.getPageSize());
         //分页查询返回页结果
         Page<Order> orderPage1 = orderMapper.selectPage(page, queryWrapper);
         return R.success(orderPage1);
