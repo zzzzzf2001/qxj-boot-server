@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<trees>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/client/LeaveController.java" title="客户端接口"
+          extension="java"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/admin/LeaveReviewController.java" title="请假审批管理"
+          extension="java"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/admin/RegistrationAuditController.java"
+          title="注册审批管理"
+          extension="java"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/admin/UserManagementController.java" title="用户管理"
+          extension="java"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/admin" title="老师/管理员端"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/client" title="学生端"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/common/PageParams.java" title="页参数类" extension="java"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/client/ClassController.java" title="班级管理"
+          extension="java"/>
+</trees>

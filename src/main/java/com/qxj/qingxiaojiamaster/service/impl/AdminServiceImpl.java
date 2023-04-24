@@ -29,7 +29,9 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
         if (result == null) {
             throw new NormalException("账号不存在");
         }
-        LoginUtil.checkEnable(result.getEnable());
+        if (result.getEnable() != 1) {
+            throw new NormalException("账号不可用");
+        }
         LoginUtil.checkAccount(admin.getPassword(), result.getPassword());
         return result;
     }
