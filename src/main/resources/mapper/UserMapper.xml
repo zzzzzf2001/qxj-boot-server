@@ -17,7 +17,7 @@
     </resultMap>
 
     <resultMap id="detailsResultMap" type="map">
-        <!--    这里是外加的    -->
+        <!--    规范!什么规范？    -->
         <result column="grade" property="grade"/>
         <result column="class" property="class"/>
         <result column="major" property="major"/>

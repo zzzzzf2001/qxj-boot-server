@@ -41,9 +41,9 @@ public class UserController {
     public R login(@RequestBody User user) {
         //获取用户信息
         User userInfo = userService.Login(user);
-        //面对困难的最好办法是逃避它
+        //规范!什么规范?
         Map<String, String> otherUserInfo = userMapper.selectOtherUserInfo(userInfo.getId());
-        
+
         //放到一块
         HashMap<String, Object> map = new HashMap<>();
         map.put("userInfo", userInfo);
