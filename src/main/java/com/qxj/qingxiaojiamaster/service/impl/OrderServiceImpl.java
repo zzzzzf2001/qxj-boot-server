@@ -89,9 +89,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<Integer> orderIds = new ArrayList<>();
         for (OrderStatus orderStatus : list) {
             Integer orderId = orderStatus.getOrderId();
-            if (orderIds.contains(orderId))
+            if (!orderIds.contains(orderId))
                 orderIds.add(orderId);
         }
+        log.info(orderIds.toString());
         //根据请假条ID查询假条集合
         List<Order> orders = orderService.lambdaQuery()
                 .in(Order::getId, orderIds)
@@ -106,13 +107,3 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
 
-//{
-//    "user_id": 1,
-//    "phone": "11451419198",
-//    "reasonType": 1,
-//    "reason": 1,
-//    "toArea": 1,
-//    "fromTime": "2023-04-23T10:25:54",
-//    "toTime": "2023-04-23T10:25:59"
-//
-//}

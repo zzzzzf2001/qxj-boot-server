@@ -56,6 +56,14 @@ public class User implements Serializable {
     @TableField("Remarks")
     private String remarks;
 
+
+    /**
+     *用户状态是否可用
+     * 审批中：0
+     * 正常可用：1
+     * 审批拒绝：-1
+     *
+     * */
     @TableField("enable")
     private Integer enable;
 

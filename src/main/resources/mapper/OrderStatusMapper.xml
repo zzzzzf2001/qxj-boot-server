@@ -14,21 +14,28 @@
     <update id="setStatusNew" parameterType="int">
         update order_status
         set status = #{status}
-        where order_id = #{order_id};
+        <where> order_id = #{order_id};
+        </where>
     </update>
     <select id="haveCommit" resultType="list">
-        select * from `order_status` where user_id=#{user_id} and status= 1
-    </select>
+        select * from `order_status`
+        <where>
+              user_id=#{user_id}
+               and status= 1
+        </where>
+</select>
     <select id="getStatusByorderID" resultType="com.qxj.qingxiaojiamaster.entity.OrderStatus">
         select *
         from order_status
-        where order_id = #{id}
+        <where> order_id = #{id}
+        </where>
     </select>
 
     <select id="selectOrderidByStatus" resultType="java.lang.Integer" parameterType="int">
         select order_id
         from order_status
-        where status = #{id}
+        <where> status = #{id}
+        </where>
     </select>
 
 </mapper>

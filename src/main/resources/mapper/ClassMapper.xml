@@ -8,6 +8,14 @@
         <result column="name" property="name" />
         <result column="grade_id" property="gradeId" />
         <result column="major_id" property="majorId" />
+        <result column="admin_id" property="adminId"/>
     </resultMap>
+    <select id="getIdByAdminId" resultType="java.lang.Integer">
+        select id from `class`
+    <where>
+        admin_id=#{adminId}
+    </where>
+
+    </select>
 
 </mapper>

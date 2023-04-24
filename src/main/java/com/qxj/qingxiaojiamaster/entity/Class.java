@@ -38,4 +38,7 @@ public class Class implements Serializable {
     private Integer majorId;
 
 
+    @TableField("admin_id")
+    private Integer adminId;
+
 }

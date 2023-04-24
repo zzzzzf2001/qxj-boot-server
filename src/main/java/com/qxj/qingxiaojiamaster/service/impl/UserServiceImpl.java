@@ -1,12 +1,22 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.config.NormalException;
+import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.mapper.ClassMapper;
 import com.qxj.qingxiaojiamaster.mapper.UserMapper;
+import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.LoginUtil;
+import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import org.springframework.stereotype.Service;
+import com.qxj.qingxiaojiamaster.entity.Class;
+import javax.annotation.Resource;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -16,8 +26,47 @@ import org.springframework.stereotype.Service;
  * @author 张锋
  * @since 2023-04-22
  */
+
+
+
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Resource
+    private ClassService classService;
+    @Resource
+    private ClassMapper classMapper;
+
+
+
+    @Override
+    public List<User> getRegistryUser(Admin admin, String name, String number, int enable,
+                                      LocalDateTime create_time, String college, String major, String className,
+                                      int currentPage,int pageSize
+                                                ) {
+        LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Class::getAdminId,admin.getId());
+        List<Class> classes = classMapper.selectList(queryWrapper);
+        ArrayList<Integer> classIds=new ArrayList<>();
+        for (Class cl:classes){
+            classIds.add(cl.getId());
+        }
+
+        LambdaQueryWrapper<User> userQueryWrapper=new LambdaQueryWrapper<>();
+        userQueryWrapper.eq(MybatisUtil.condition(name),User::getName,name)
+                        .eq(MybatisUtil.condition(enable),User::getStatus,enable)
+                        .eq(MybatisUtil.condition(create_time),User::getCrateTime,create_time)
+                        ;
+
+
+
+
+
+
+
+        return null;
+    }
+
 
     /**
      * @param user

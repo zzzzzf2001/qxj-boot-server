@@ -30,10 +30,11 @@
              grade,
              major,
              college
-        where class.id = #{classId}
+        <where> class.id = #{classId}
           and grade.id = class.grade_id
           and major.id = class.major_id
           and major.college_id = college.id
+        </where>
     </select>
 
 </mapper>
