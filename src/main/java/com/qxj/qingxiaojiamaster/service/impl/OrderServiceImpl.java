@@ -1,33 +1,25 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.qxj.qingxiaojiamaster.common.PageParams;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.qxj.qingxiaojiamaster.entity.User;
-import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author 张锋
@@ -45,22 +37,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     OrderService orderService;
 
     @Override
-
     // 提交 请假请求
-    public boolean LeaveCommit(Order order,User user) {
+    public boolean LeaveCommit(Order order, Integer userId) {
         //将请假表进行保存
-        order.setUserId(user.getId());
+        order.setUserId(userId);
         boolean result1 = this.save(order);
         //判断是否保存成功
-        if (result1==false){
-           return false;
-       }
+        if (result1 == false) {
+            return false;
+        }
         //将刚刚存入的请假表取出（因为Order的ID为自增，保存后才会有ID）
         Order order2 = orderService.lambdaQuery()
                 .eq(Order::getCreateTime, order.getCreateTime())
                 .one();
         //创建请假表状态类
-        OrderStatus orderStatus=new OrderStatus();
+        OrderStatus orderStatus = new OrderStatus();
         //请假表默认状态为1
         orderStatus.setStatus(1);
         orderStatus.setOrderId(order2.getId());
@@ -68,9 +59,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //将请假类保存入数据库
         boolean result2 = orderStatusService.save(orderStatus);
 
-        return result1&&result2;
+        return result1 && result2;
     }
-
 
 
 //    @Override
@@ -96,8 +86,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .eq(StringUtils.isNotBlank(String.valueOf(status)), OrderStatus::getStatus, status)
                 .list();
         //将请假条ID从状态集合中取出，并封装到数组中
-        List<Integer> orderIds=new ArrayList<>();
-        for(OrderStatus orderStatus:list){
+        List<Integer> orderIds = new ArrayList<>();
+        for (OrderStatus orderStatus : list) {
             Integer orderId = orderStatus.getOrderId();
             if (orderIds.contains(orderId))
                 orderIds.add(orderId);

@@ -1,16 +1,15 @@
 package com.qxj.qingxiaojiamaster.web.client;
 
 
-
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.User;
-import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.qxj.qingxiaojiamaster.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,21 +21,21 @@ import javax.annotation.Resource;
  * @version 1.0.0
  * @since : 2023/4/22 09:23
  **/
-
+@Slf4j
 @RestController
 @RequestMapping("/user")
 public class LeaveController {
 
-@Resource
+    @Resource
     UserService userService;
 
-@Resource
+    @Resource
     OrderService orderService;
 
-@Resource
+    @Resource
     OrderStatusService orderStatusService;
 
-@Resource
+    @Resource
     OrderStatusMapper orderStatusMapper;
 
 /**
@@ -44,9 +43,6 @@ public class LeaveController {
  * 提交证明材料
  *
  * **/
-
-
-
 
 
     /**
@@ -58,13 +54,12 @@ public class LeaveController {
      */
     @Transactional
     @PostMapping("/commit")
-    public R LeaveCommit(@RequestBody Order order, @RequestBody User user){
-
-        try{
-            orderService.LeaveCommit(order,user);
-        }
-        catch (Exception e){
-            throw new NormalException("添加失败",e);
+    public R LeaveCommit(@RequestBody Order order, @RequestParam("userId") Integer userId) {
+        log.info(order.toString());
+        try {
+            orderService.LeaveCommit(order, userId);
+        } catch (Exception e) {
+            throw new NormalException("添加失败", e);
         }
         return R.success("添加成功");
     }
@@ -79,18 +74,15 @@ public class LeaveController {
      */
     @Transactional
     @GetMapping("/back/{id}")
-    public R  backLeave(@PathVariable("id") int id){
+    public R backLeave(@PathVariable("id") int id) {
 
-       try {
-           orderStatusService.backLeave(id);
-       }
-       catch (Exception e){
-           throw new NormalException("销假请求发送失败",e);
-       }
-       return R.success();
+        try {
+            orderStatusService.backLeave(id);
+        } catch (Exception e) {
+            throw new NormalException("销假请求发送失败", e);
+        }
+        return R.success();
     }
-
-
 
 
     /**
@@ -101,12 +93,12 @@ public class LeaveController {
      * @Date 2023/4/23
      */
     @GetMapping("/showLeave/{status}")
-    public R showOrder( @RequestBody User user,
-                        @RequestParam("currentPage") Integer currentPage,
-                        @RequestParam("pageSize") Integer pageSize,
-                        @PathVariable("status") int status){
+    public R showOrder(@RequestBody User user,
+                       @RequestParam("currentPage") Integer currentPage,
+                       @RequestParam("pageSize") Integer pageSize,
+                       @PathVariable("status") int status) {
 
-        return orderService.selectOrderByStatus(user,currentPage,pageSize,status);
+        return orderService.selectOrderByStatus(user, currentPage, pageSize, status);
     }
 
     /**
@@ -117,22 +109,19 @@ public class LeaveController {
      * @Date 2023/4/23
      */
     @GetMapping("/cancel/{id}")
-    public R cancelLeave(@PathVariable("id") int id){
+    public R cancelLeave(@PathVariable("id") int id) {
         try {
             orderStatusService.cancelLeave(id);
-        }
-        catch (Exception e){
-            throw new NormalException("取消请假发送失败",e);
+        } catch (Exception e) {
+            throw new NormalException("取消请假发送失败", e);
         }
         return R.success();
     }
 
 
-
     /**
-    修改假条信息（只可去往地，开始时间，结束时间）
+     修改假条信息（只可去往地，开始时间，结束时间）
      **/
-
 
 
 }

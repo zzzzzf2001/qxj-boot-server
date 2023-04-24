@@ -1,16 +1,17 @@
 package com.qxj.qingxiaojiamaster.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.*;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import lombok.*;
-
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author 张锋
@@ -26,7 +27,7 @@ public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @TableField("user_id")

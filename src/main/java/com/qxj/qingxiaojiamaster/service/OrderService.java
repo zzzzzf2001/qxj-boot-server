@@ -1,17 +1,13 @@
 package com.qxj.qingxiaojiamaster.service;
 
-import com.qxj.qingxiaojiamaster.common.PageParams;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Order;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.qxj.qingxiaojiamaster.entity.User;
-import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
-
-import java.util.List;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author 张锋
@@ -19,7 +15,7 @@ import java.util.List;
  */
 public interface OrderService extends IService<Order> {
 
-    boolean LeaveCommit(Order order , User user);
+    boolean LeaveCommit(Order order, Integer user);
 
     R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
 
