@@ -64,6 +64,7 @@ public class UserManagementController {
                 .like(MybatisUtil.condition(number), User::getNumber, number)
                 .like(MybatisUtil.condition(enable), User::getEnable, enable)
                 .in(MybatisUtil.condition(classId), User::getClassId, (Object[]) classId)
+                .orderBy(true, false, User::getCrateTime)
                 .last(MybatisUtil.limitPage(currentPage, pageSize))
                 .list();
         return R.success(list);
@@ -118,5 +119,5 @@ public class UserManagementController {
         }
         return R.success();
     }
-    
+
 }
