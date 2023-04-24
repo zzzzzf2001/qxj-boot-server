@@ -113,3 +113,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 }
+
+
+
+//{
+//    "user_id": 1,
+//    "phone": "11451419198",
+//    "reasonType": 1,
+//    "reason": 1,
+//    "toArea": 1,
+//    "fromTime": "2023-04-23T10:25:54",
+//    "toTime": "2023-04-23T10:25:59"
+//
+//}
