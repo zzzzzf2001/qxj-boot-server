@@ -30,6 +30,7 @@ public class MybatisUtil {
      * @author hasdsd
      * @Date 2023/4/23
      */
+    @Deprecated
     public static String handleArray(String[] array) {
         //除去两个中括号
         return Arrays.toString(array).replace('[', ' ').replace(']', ' ');

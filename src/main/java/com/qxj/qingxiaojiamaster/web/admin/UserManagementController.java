@@ -64,7 +64,7 @@ public class UserManagementController {
                 .like(MybatisUtil.condition(username), User::getName, username)
                 .like(MybatisUtil.condition(number), User::getNumber, number)
                 .like(MybatisUtil.condition(enable), User::getEnable, enable)
-                .in(MybatisUtil.condition(classId), User::getClassId, MybatisUtil.handleArray(classId))
+                .in(MybatisUtil.condition(classId), User::getClassId, (Object[]) classId)
                 .last(MybatisUtil.limitPage(currentPage, pageSize))
                 .list();
         return R.success(list);
