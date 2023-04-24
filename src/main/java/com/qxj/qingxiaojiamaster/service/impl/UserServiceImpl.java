@@ -33,6 +33,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new NormalException("账号不存在");
         }
         //检测是否正确
+        LoginUtil.checkEnable(user.getEnable());
         LoginUtil.checkAccount(user.getPassword(), result.getPassword());
         result.setPassword("");
         return result;

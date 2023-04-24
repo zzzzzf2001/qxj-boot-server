@@ -1,11 +1,11 @@
 package com.qxj.qingxiaojiamaster.service;
 
-import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.qxj.qingxiaojiamaster.entity.Admin;
 
 /**
  * <p>
- *  服务类
+ * 服务类
  * </p>
  *
  * @author 张锋
@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface AdminService extends IService<Admin> {
 
+    Admin Login(Admin admin);
 }

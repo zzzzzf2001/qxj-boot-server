@@ -27,5 +27,18 @@ public class LoginUtil {
 
     }
 
+    /**
+     * @param enable
+     * @return void
+     * @Description 检测账号是否可用
+     * @author hasdsd
+     * @Date 2023/4/24
+     */
+    public static void checkEnable(Integer enable) {
+        if (enable != 1) {
+            throw new NormalException("账号不可用");
+        }
+    }
+
 
 }

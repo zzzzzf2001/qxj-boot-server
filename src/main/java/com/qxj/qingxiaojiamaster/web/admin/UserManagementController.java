@@ -2,7 +2,6 @@ package com.qxj.qingxiaojiamaster.web.admin;
 
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
-import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.service.AdminService;
 import com.qxj.qingxiaojiamaster.service.UserService;
@@ -48,7 +47,6 @@ public class UserManagementController {
      * @Description 获取全部学生信息
      * @author hasdsd
      * @Date 2023/4/23
-     * TODO:查出来的结果问题
      */
     @GetMapping()
     public R getUserInfo(
@@ -61,6 +59,7 @@ public class UserManagementController {
     ) {
         List<User> list = userService
                 .lambdaQuery()
+                .select(User.class, info -> !info.getColumn().equals("password"))
                 .like(MybatisUtil.condition(username), User::getName, username)
                 .like(MybatisUtil.condition(number), User::getNumber, number)
                 .like(MybatisUtil.condition(enable), User::getEnable, enable)
@@ -92,13 +91,13 @@ public class UserManagementController {
     /**
      * @param userId
      * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 软删除用户
+     * @Description 删除或恢复用户
      * @author hasdsd
      * @Date 2023/4/23
      */
     @DeleteMapping()
-    public R deleteUser(@RequestParam("userId") Integer userId) {
-        userService.updateById(User.builder().id(userId).enable(0).build());
+    public R deleteUser(@RequestParam("userId") Integer userId, @RequestParam("enable") Integer enable) {
+        userService.updateById(User.builder().id(userId).enable(enable).build());
         return R.success();
     }
 
@@ -119,20 +118,5 @@ public class UserManagementController {
         }
         return R.success();
     }
-
-    /**
-     * @param currentPage, pageSize
-     * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 获取全部管理员信息
-     * @author hasdsd
-     * @Date 2023/4/23
-     */
-    @GetMapping("/admins")
-    public R getAdminInfo(
-            @RequestParam("currentPage") Integer currentPage,
-            @RequestParam("pageSize") Integer pageSize
-    ) {
-        List<Admin> list = adminService.lambdaQuery().last(MybatisUtil.limitPage(currentPage, pageSize)).list();
-        return R.success(list);
-    }
+    
 }

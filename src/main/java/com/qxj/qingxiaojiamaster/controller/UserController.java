@@ -43,7 +43,7 @@ public class UserController {
         User userInfo = userService.Login(user);
         //面对困难的最好办法是逃避它
         Map<String, String> otherUserInfo = userMapper.selectOtherUserInfo(userInfo.getId());
-
+        
         //放到一块
         HashMap<String, Object> map = new HashMap<>();
         map.put("userInfo", userInfo);

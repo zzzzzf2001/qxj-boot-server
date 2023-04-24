@@ -44,5 +44,8 @@ public class Admin implements Serializable {
     @TableField("role")
     private Integer role;
 
+    @TableField("enable")
+    private Integer enable;
+
 
 }
