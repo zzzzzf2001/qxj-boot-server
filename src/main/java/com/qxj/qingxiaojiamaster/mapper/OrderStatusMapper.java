@@ -3,6 +3,7 @@ package com.qxj.qingxiaojiamaster.mapper;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
 @Mapper
 public interface OrderStatusMapper extends BaseMapper<OrderStatus> {
 
-    boolean setStatusNew(int id,int status);
+    boolean setStatusNew(@Param("order_id")int id,@Param("status") int status);
 
     OrderStatus getStatusByorderID(int id);
 

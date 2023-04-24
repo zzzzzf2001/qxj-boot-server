@@ -19,6 +19,8 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @TableName("order")
 public class Order implements Serializable {
 

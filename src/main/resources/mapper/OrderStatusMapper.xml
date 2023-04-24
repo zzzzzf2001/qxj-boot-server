@@ -14,7 +14,7 @@
     <update id="setStatusNew" parameterType="int">
         update order_status
         set status = #{status}
-        where order_id = #{id};
+        where order_id = #{order_id};
     </update>
     <select id="getStatusByorderID" resultType="com.qxj.qingxiaojiamaster.entity.OrderStatus">
         select *
