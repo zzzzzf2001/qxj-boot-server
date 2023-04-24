@@ -19,7 +19,7 @@ import java.util.List;
  */
 public interface OrderService extends IService<Order> {
 
-    boolean LeaveCommit(LeaveCommitDto leaveCommitDto);
+    boolean LeaveCommit(Order order , User user);
 
     R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
 

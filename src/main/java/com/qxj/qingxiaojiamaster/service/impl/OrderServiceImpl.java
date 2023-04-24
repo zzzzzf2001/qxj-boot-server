@@ -47,19 +47,18 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
 
     // 提交 请假请求
-    public boolean LeaveCommit(LeaveCommitDto leaveCommitDto) {
-        //创建请假类对象
-        Order order = new Order();
-        //将DTO赋值给请假类对象
-        BeanUtils.copyProperties(leaveCommitDto,order);
+    public boolean LeaveCommit(Order order,User user) {
         //将请假表进行保存
-        boolean result1 = save(order);
+        order.setUserId(user.getId());
+        boolean result1 = this.save(order);
         //判断是否保存成功
         if (result1==false){
            return false;
        }
         //将刚刚存入的请假表取出（因为Order的ID为自增，保存后才会有ID）
-        Order order2 = orderMapper.selectById(leaveCommitDto.getId());
+        Order order2 = orderService.lambdaQuery()
+                .eq(Order::getCreateTime, order.getCreateTime())
+                .one();
         //创建请假表状态类
         OrderStatus orderStatus=new OrderStatus();
         //请假表默认状态为1

@@ -4,6 +4,7 @@ package com.qxj.qingxiaojiamaster.web.client;
 
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
+import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.entity.dto.LeaveCommitDto;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
@@ -49,7 +50,7 @@ public class LeaveController {
 
 
     /**
-     * @param leaveCommitDto
+     * @param order,user
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 请求销假
      * @author 15754
@@ -57,11 +58,10 @@ public class LeaveController {
      */
     @Transactional
     @PostMapping("/commit")
-    public R LeaveCommit(@RequestBody LeaveCommitDto  leaveCommitDto){
-
+    public R LeaveCommit(@RequestBody Order order, @RequestBody User user){
 
         try{
-            orderService.LeaveCommit(leaveCommitDto);
+            orderService.LeaveCommit(order,user);
         }
         catch (Exception e){
             throw new NormalException("添加失败",e);
