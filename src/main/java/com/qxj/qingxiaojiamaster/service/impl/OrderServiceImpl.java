@@ -11,9 +11,12 @@ import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +29,7 @@ import java.util.List;
  * @since 2023-04-22
  */
 @Service
+@Slf4j
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
     @Resource
     OrderMapper orderMapper;
@@ -36,47 +40,43 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     OrderService orderService;
 
+
+    @Transactional
     @Override
     // 提交 请假请求
     public boolean LeaveCommit(Order order, Integer userId) {
         //将请假表进行保存
         order.setUserId(userId);
+        log.info(order.toString());
         boolean result1 = this.save(order);
         //判断是否保存成功
         if (result1 == false) {
             return false;
         }
-        //将刚刚存入的请假表取出（因为Order的ID为自增，保存后才会有ID）
-        Order order2 = orderService.lambdaQuery()
-                .eq(Order::getCreateTime, order.getCreateTime())
-                .one();
-        //创建请假表状态类
-        OrderStatus orderStatus = new OrderStatus();
-        //请假表默认状态为1
-        orderStatus.setStatus(1);
-        orderStatus.setOrderId(order2.getId());
-        orderStatus.setUserId(order2.getUserId());
-        //将请假类保存入数据库
-        boolean result2 = orderStatusService.save(orderStatus);
+        return true;
+    }
 
-        return result1 && result2;
+    @Override
+    public boolean setStatus(Order order, Integer userid) {
+        //查询请假表
+        Order order2 = orderService.lambdaQuery()
+                .eq(Order::getFromTime,order.getFromTime())
+                .eq(Order::getToTime,order.getToTime())
+                .eq(Order::getUserId,userid)
+                .one();
+        //创建请假状态类
+        OrderStatus orderStatus = new OrderStatus();
+        //填入用户名和请假表ID
+        orderStatus.setUserId(userid);
+        orderStatus.setCreateTime(LocalDateTime.now());
+        orderStatus.setOrderId(order2.getId());
+        boolean result = orderStatusService.save(orderStatus);
+        return result;
     }
 
 
-//    @Override
-//    public R selectOrderByStatus(PageParams pageParams, int status) {
-//        //通过请假单状态找到所有请假表的ID
-//        List<Integer> orderids = orderStatusMapper.selectOrderidByStatus(status);
-//        //创建条件查询器
-//        LambdaQueryWrapper<Order> queryWrapper=new LambdaQueryWrapper<>();
-//        //添加查询条件 倘若id为空，则会直接查询 ，不为空就按条件查询 orderid in (orderids)
-//        queryWrapper.in(!orderids.isEmpty(),Order::getId,orderids);
-//        //分页查询，创建分页类
-//        Page<Order> page = new Page<Order>(pageParams.getCurrentPage(),pageParams.getPageSize());
-//        //分页查询返回页结果
-//        Page<Order> orderPage1 = orderMapper.selectPage(page, queryWrapper);
-//        return R.success(orderPage1);
-//    }
+
+
 
     @Override
     public R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status) {
@@ -103,3 +103,16 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     }
 
 }
+
+
+
+//{
+//    "user_id": 1,
+//    "phone": "11451419198",
+//    "reasonType": 1,
+//    "reason": 1,
+//    "toArea": 1,
+//    "fromTime": "2023-04-23T10:25:54",
+//    "toTime": "2023-04-23T10:25:59"
+//
+//}

@@ -15,8 +15,11 @@ import com.qxj.qingxiaojiamaster.entity.User;
  */
 public interface OrderService extends IService<Order> {
 
-    boolean LeaveCommit(Order order, Integer user);
+    boolean LeaveCommit(Order order, Integer userid);
+
+    boolean setStatus(Order order, Integer userid);
 
     R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
+
 
 }

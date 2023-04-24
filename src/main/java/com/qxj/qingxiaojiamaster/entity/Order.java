@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
+import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,12 +23,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@TableName("order")
+@TableName("`order`")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
     @TableId(value = "id", type = IdType.AUTO)
+
     private Integer id;
 
     @TableField("user_id")
@@ -51,7 +54,7 @@ public class Order implements Serializable {
     @TableField("to_area")
     private String toArea;
 
-    @TableField("create_time")
+    @TableField(value = "create_time")
     private LocalDateTime createTime;
 
     @TableField("img_url")
