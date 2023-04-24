@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * <p>
@@ -35,5 +36,11 @@ public class OrderStatusServiceImpl extends ServiceImpl<OrderStatusMapper, Order
         int status=9;
         boolean result = orderStatusMapper.setStatusNew(id,status);
         return result;
+    }
+
+    @Override
+    public boolean haveCommit(int userId) {
+        List<OrderStatus> haveCommit = orderStatusMapper.haveCommit(userId);
+        return  haveCommit.size()>0? true : false;
     }
 }

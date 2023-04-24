@@ -16,6 +16,9 @@
         set status = #{status}
         where order_id = #{order_id};
     </update>
+    <select id="haveCommit" resultType="list">
+        select * from `order_status` where user_id=#{user_id} and status= 1
+    </select>
     <select id="getStatusByorderID" resultType="com.qxj.qingxiaojiamaster.entity.OrderStatus">
         select *
         from order_status

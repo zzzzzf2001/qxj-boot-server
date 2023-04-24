@@ -1,5 +1,6 @@
 package com.qxj.qingxiaojiamaster.mapper;
 
+import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,4 +24,6 @@ public interface OrderStatusMapper extends BaseMapper<OrderStatus> {
     OrderStatus getStatusByorderID(int id);
 
     List<Integer> selectOrderidByStatus(int status);
+
+    List<OrderStatus> haveCommit(@Param("user_id") int userId);
 }

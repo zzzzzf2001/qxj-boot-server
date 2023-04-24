@@ -16,4 +16,8 @@ public interface OrderStatusService extends IService<OrderStatus> {
     boolean backLeave(int id);
 
     boolean cancelLeave(int id);
+
+
+    boolean haveCommit(int userId);
+
 }

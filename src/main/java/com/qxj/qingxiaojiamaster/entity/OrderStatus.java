@@ -51,8 +51,5 @@ public class OrderStatus implements Serializable {
     @TableField("user_id")
     private Integer userId;
 
-    @TableField("img_url")
-    private String imgUrl;
-
 
 }
