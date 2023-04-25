@@ -73,11 +73,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     /**
-     * @param admin,user,number,enable,create_time,classId,
+     * @param admin,user,number,enable,create_time,classId,currentPage,pageSize
      * @return com.qxj.qingxiaojiamaster.entity.User
      * @Description 用户登录获取信息
-     * @author hasdsd
-     * @Date 2023/4/22
+     * @author 15754
+     * @Date 2023/4/24
      */
     @Override
     public R getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time, Integer classId, Integer currentPage, Integer pageSize) {
@@ -110,11 +110,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                         .eq(MybatisUtil.condition(enable), User::getEnable, enable)
                         //查询创建时间
                         .eq(MybatisUtil.condition(create_time), User::getCrateTime, create_time)
+                        //若指定班级号，根据班级号查询
                         .eq(MybatisUtil.condition(classId), User::getClassId, classId)
+                        //若未指定则直接按照该老师所管辖的班级ID搜索
                         .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
+                        //按照创建时间排序
                         .orderBy(MybatisUtil.condition(create_time), false,User::getCrateTime)
+                        //分页查询默认第一页，一页10个
                         .last(MybatisUtil.limitPage(pageParams.getCurrentPage(),pageParams.getPageSize())
         ));
-        return list.size()>0? R.success(list): R.error(CODE_400,"暂未查询到学生信息");
+        return list.size()>0? R.success(list): R.error(CODE_400,"暂未查询到您所管理的学生信息");
     }
 }
