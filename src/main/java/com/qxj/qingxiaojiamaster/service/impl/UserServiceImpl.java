@@ -1,6 +1,7 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
@@ -11,6 +12,7 @@ import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.LoginUtil;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import com.qxj.qingxiaojiamaster.entity.Class;
 import javax.annotation.Resource;
@@ -28,7 +30,7 @@ import java.util.List;
  */
 
 
-
+@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
@@ -36,36 +38,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ClassService classService;
     @Resource
     private ClassMapper classMapper;
+    @Resource
+    private UserService userService;
 
 
-
-    @Override
-    public List<User> getRegistryUser(Admin admin, String name, String number, int enable,
-                                      LocalDateTime create_time, String college, String major, String className,
-                                      int currentPage,int pageSize
-                                                ) {
-        LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
-        queryWrapper.eq(Class::getAdminId,admin.getId());
-        List<Class> classes = classMapper.selectList(queryWrapper);
-        ArrayList<Integer> classIds=new ArrayList<>();
-        for (Class cl:classes){
-            classIds.add(cl.getId());
-        }
-
-        LambdaQueryWrapper<User> userQueryWrapper=new LambdaQueryWrapper<>();
-        userQueryWrapper.eq(MybatisUtil.condition(name),User::getName,name)
-                        .eq(MybatisUtil.condition(enable),User::getStatus,enable)
-                        .eq(MybatisUtil.condition(create_time),User::getCrateTime,create_time)
-                        ;
-
-
-
-
-
-
-
-        return null;
-    }
 
 
     /**
@@ -88,5 +64,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginUtil.checkAccount(user.getPassword(), result.getPassword());
         result.setPassword("");
         return result;
+    }
+
+    @Override
+    public List<User> getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time, Integer classId, Integer currentPage, Integer pageSize) {
+        LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
+        queryWrapper.eq(Class::getAdminId,admin.getId());
+        List<Class> classes = classMapper.selectList(queryWrapper);
+        ArrayList<Integer> classIds=new ArrayList<>();
+        for (Class cl:classes){
+            classIds.add(cl.getId());
+        }
+        log.info(classes.toString());
+        LambdaQueryWrapper<User> userQueryWrapper=new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<User> wrapper = userQueryWrapper.eq(MybatisUtil.condition(name), User::getName, name)
+                .eq(MybatisUtil.condition(number),User::getNumber,number)
+                .eq(MybatisUtil.condition(enable), User::getEnable, enable)
+                .eq(MybatisUtil.condition(create_time), User::getCrateTime, create_time)
+                .eq(MybatisUtil.condition(classId), User::getClassId, classId)
+                .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
+                .last(MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize),MybatisUtil.limitPage(currentPage, pageSize));
+            log.info(wrapper.toString());
+        List<User> list = userService.list(wrapper);
+        return list;
     }
 }

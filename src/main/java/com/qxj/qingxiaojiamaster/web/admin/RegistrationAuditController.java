@@ -5,13 +5,12 @@ import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.UserService;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,7 +23,7 @@ import java.util.Map;
 
 
 
-
+@Slf4j
 @RestController
 @RequestMapping("/admin/registry")
 public class RegistrationAuditController {
@@ -38,23 +37,29 @@ public class RegistrationAuditController {
      * 对于注册信息的审核  /audit
     \
 
-     *  查看注册信息      /show
-      **/
-
+     /**
+     * @param   admin,name,numer,enable,create_time,classId,currentPage,pageSize
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 新增学生信息
+     * @author 15754
+     * @Date 2023/4/24
+     */
+    @GetMapping("/select")
     public R selectRegistry(@RequestBody Admin admin,
                             @RequestParam(value = "name",required = false) String name,
                             @RequestParam(value = "number",required = false) String number,
-                            @RequestParam(value = "enable",required = false) int enable,
+                            @RequestParam(value = "enable",required = false) Integer enable,
                             @RequestParam(value = "create_table",required = false)LocalDateTime create_time,
-                            @RequestParam(value = "collegeName",required = false) String  college,
-                            @RequestParam(value = "majorName",required = false) String major,
-                            @RequestParam(value = "className",required = false) String className,
-                            @RequestParam(value = "currentPage",required = false) int currentPage,
-                            @RequestParam(value = "pageSize",required = false) int pageSize
-                            ){
-        userService.getRegistryUser(admin,name, number, enable, create_time, college, major,className,currentPage,pageSize);
+                            @RequestParam(value = "class_id" ,required = false) Integer classId,
+                            @RequestParam(value = "currentPage",required = false) Integer currentPage,
+                            @RequestParam(value = "pageSize",required = false) Integer pageSize
 
-        return null;
+    ){
+        log.info(admin.getId().toString());
+        List<User> registryUser = userService.getRegistryUser(admin, name, number, enable,create_time, classId, currentPage, pageSize);
+
+
+        return R.success(registryUser);
     }
 
      /**

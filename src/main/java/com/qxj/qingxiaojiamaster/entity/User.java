@@ -50,11 +50,13 @@ public class User implements Serializable {
 
     @TableField("class_id")
     private Integer classId;
+
     @TableField("status")
     private Integer status;
 
     @TableField("Remarks")
     private String remarks;
+
 
 
     /**
