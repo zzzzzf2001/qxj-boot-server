@@ -77,7 +77,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         log.info(classes.toString());
         LambdaQueryWrapper<User> userQueryWrapper=new LambdaQueryWrapper<>();
-        LambdaQueryWrapper<User> wrapper = userQueryWrapper.eq(MybatisUtil.condition(name), User::getName, name)
+        LambdaQueryWrapper<User> wrapper = userQueryWrapper.like(MybatisUtil.condition(name), User::getName, name)
                 .eq(MybatisUtil.condition(number),User::getNumber,number)
                 .eq(MybatisUtil.condition(enable), User::getEnable, enable)
                 .eq(MybatisUtil.condition(create_time), User::getCrateTime, create_time)
