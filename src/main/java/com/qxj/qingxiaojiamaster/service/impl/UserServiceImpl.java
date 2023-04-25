@@ -72,6 +72,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return result;
     }
 
+    /**
+     * @param admin,user,number,enable,create_time,classId,
+     * @return com.qxj.qingxiaojiamaster.entity.User
+     * @Description 用户登录获取信息
+     * @author hasdsd
+     * @Date 2023/4/22
+     */
     @Override
     public R getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time, Integer classId, Integer currentPage, Integer pageSize) {
 
@@ -105,6 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                         .eq(MybatisUtil.condition(create_time), User::getCrateTime, create_time)
                         .eq(MybatisUtil.condition(classId), User::getClassId, classId)
                         .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
+                        .orderBy(MybatisUtil.condition(create_time), false,User::getCrateTime)
                         .last(MybatisUtil.limitPage(pageParams.getCurrentPage(),pageParams.getPageSize())
         ));
         return list.size()>0? R.success(list): R.error(CODE_400,"暂未查询到学生信息");
