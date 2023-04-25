@@ -23,7 +23,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
+
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_404;
 
 /**
  * <p>
@@ -119,6 +120,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                         //分页查询默认第一页，一页10个
                         .last(MybatisUtil.limitPage(pageParams.getCurrentPage(),pageParams.getPageSize())
         ));
-        return list.size()>0? R.success(list): R.error(CODE_400,"暂未查询到您所管理的学生信息");
+        return list.size()>0? R.success(list): R.error(CODE_404,"暂未查询到您所管理的学生信息");
     }
 }
