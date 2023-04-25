@@ -9,6 +9,8 @@ package com.qxj.qingxiaojiamaster.common;
 
 import lombok.Data;
 import lombok.ToString;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  *
@@ -19,6 +21,7 @@ import lombok.ToString;
 
 
 
+@Configuration
 @Data
 @ToString
 public class PageParams {

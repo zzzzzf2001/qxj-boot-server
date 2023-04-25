@@ -55,11 +55,10 @@ public class RegistrationAuditController {
                             @RequestParam(value = "pageSize",required = false) Integer pageSize
 
     ){
-        log.info(admin.getId().toString());
-        List<User> registryUser = userService.getRegistryUser(admin, name, number, enable,create_time, classId, currentPage, pageSize);
 
 
-        return R.success(registryUser);
+
+        return R.success(userService.getRegistryUser(admin, name, number, enable,create_time, classId, currentPage, pageSize));
     }
 
      /**

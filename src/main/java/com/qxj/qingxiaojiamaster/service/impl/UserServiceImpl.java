@@ -2,7 +2,10 @@ package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qxj.qingxiaojiamaster.common.PageParams;
+import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
@@ -19,6 +22,8 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
 
 /**
  * <p>
@@ -40,7 +45,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ClassMapper classMapper;
     @Resource
     private UserService userService;
-
+    @Resource
+    private PageParams pageParams;
 
 
 
@@ -67,25 +73,40 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public List<User> getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time, Integer classId, Integer currentPage, Integer pageSize) {
+    public R getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time, Integer classId, Integer currentPage, Integer pageSize) {
+
         LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
+        //首先要将管理员ID放入条件查询器中
         queryWrapper.eq(Class::getAdminId,admin.getId());
+        //查询出该管理员所管辖的班级
         List<Class> classes = classMapper.selectList(queryWrapper);
+        //将管辖班级的ID全部取出
         ArrayList<Integer> classIds=new ArrayList<>();
         for (Class cl:classes){
             classIds.add(cl.getId());
         }
-        log.info(classes.toString());
-        LambdaQueryWrapper<User> userQueryWrapper=new LambdaQueryWrapper<>();
-        LambdaQueryWrapper<User> wrapper = userQueryWrapper.like(MybatisUtil.condition(name), User::getName, name)
-                .eq(MybatisUtil.condition(number),User::getNumber,number)
-                .eq(MybatisUtil.condition(enable), User::getEnable, enable)
-                .eq(MybatisUtil.condition(create_time), User::getCrateTime, create_time)
-                .eq(MybatisUtil.condition(classId), User::getClassId, classId)
-                .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
-                .last(MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize),MybatisUtil.limitPage(currentPage, pageSize));
-            log.info(wrapper.toString());
-        List<User> list = userService.list(wrapper);
-        return list;
+        //判断curreage与pagesize是否为空（避免空指针异常），倘若有一人空则会直接走默认值
+         if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
+             //二者皆为非空才可以设置值
+             pageParams.setPageSize(pageSize);
+             pageParams.setCurrentPage(currentPage);
+         }
+
+
+        List<User> list = userService.list(
+                new LambdaQueryWrapper<User>()
+                        //模糊查询姓名
+                        .like(MybatisUtil.condition(name), User::getName, name)
+                        //查询学号
+                        .eq(MybatisUtil.condition(number),User::getNumber,number)
+                        //查询是否可用
+                        .eq(MybatisUtil.condition(enable), User::getEnable, enable)
+                        //查询创建时间
+                        .eq(MybatisUtil.condition(create_time), User::getCrateTime, create_time)
+                        .eq(MybatisUtil.condition(classId), User::getClassId, classId)
+                        .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
+                        .last(MybatisUtil.limitPage(pageParams.getCurrentPage(),pageParams.getPageSize())
+        ));
+        return list.size()>0? R.success(list): R.error(CODE_400,"暂未查询到学生信息");
     }
 }

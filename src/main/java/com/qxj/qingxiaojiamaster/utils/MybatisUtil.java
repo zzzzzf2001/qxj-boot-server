@@ -1,5 +1,7 @@
 package com.qxj.qingxiaojiamaster.utils;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -20,6 +22,7 @@ public class MybatisUtil {
      * @Date 2023/4/23
      */
     public static String limitPage(Integer currentPage, Integer pageSize) {
+
         return String.format("limit %s,%s", (currentPage - 1) * pageSize, pageSize);
     }
 
