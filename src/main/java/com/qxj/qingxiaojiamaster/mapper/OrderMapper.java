@@ -20,4 +20,5 @@ import java.util.Map;
 @Mapper
 public interface OrderMapper extends BaseMapper<Order> {
 
+    String selectPicByUID(@Param("userId") Integer userId);
 }

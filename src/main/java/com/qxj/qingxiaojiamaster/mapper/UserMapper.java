@@ -2,6 +2,7 @@ package com.qxj.qingxiaojiamaster.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.entity.dto.UserDetails;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -17,6 +18,8 @@ import java.util.Map;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
+
+  UserDetails getDetailById(@Param("userId") Integer id);
 
     Map<String, String> selectOtherUserInfo(@Param("classId") Integer id);
 }

@@ -36,5 +36,8 @@
           and major.college_id = college.id
         </where>
     </select>
+    <select id="getDetailById" resultType="com.qxj.qingxiaojiamaster.entity.dto.UserDetails">
+        select * from  all_student_info where student_id=#{userId}
+    </select>
 
 </mapper>

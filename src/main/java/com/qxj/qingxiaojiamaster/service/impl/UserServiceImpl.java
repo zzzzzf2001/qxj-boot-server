@@ -9,7 +9,9 @@ import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.entity.dto.UserDetails;
 import com.qxj.qingxiaojiamaster.mapper.ClassMapper;
+import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.mapper.UserMapper;
 import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.UserService;
@@ -49,6 +51,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Resource
     private PageParams pageParams;
 
+    @Resource
+    private  UserMapper userMapper;
+
+    @Resource
+    private OrderMapper orderMapper;
 
 
     /**
@@ -93,7 +100,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         for (Class cl:classes){
             classIds.add(cl.getId());
         }
-        //判断curreage与pagesize是否为空（避免空指针异常），倘若有一人空则会直接走默认值
+        //判断curreage与pagesize是否为空（避免空指针异常），倘若有一个空则会直接走默认值
          if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
              //二者皆为非空才可以设置值
              pageParams.setPageSize(pageSize);
@@ -121,5 +128,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                         .last(MybatisUtil.limitPage(pageParams.getCurrentPage(),pageParams.getPageSize())
         ));
         return list.size()>0? R.success(list): R.error(CODE_404,"暂未查询到您所管理的学生信息");
+    }
+
+    @Override
+    public UserDetails getUserDetail(Integer userId) {
+        UserDetails detail= userMapper.getDetailById(userId);
+        String picurl  = orderMapper.selectPicByUID(userId);
+        detail.setOrderPicUrl(picurl);
+        return detail;
     }
 }

@@ -15,7 +15,9 @@
         <result column="create_time" property="createTime" />
         <result column="img_url" property="imgUrl" />
     </resultMap>
-
+    <select id="selectPicByUID" resultType="string">
+        select img_url from `order` where user_id=#{userId}
+    </select>
 
 
 </mapper>

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapp
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.entity.dto.UserDetails;
 import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_500;
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_404;
 
 /**
  * @author : 15754
@@ -35,6 +37,27 @@ public class RegistrationAuditController {
 
     @Resource
     private UserService userService;
+
+
+    /**
+     * @param   user
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 查询学生详细信息
+     * @author 15754
+     * @Date 2023/4/26
+     */
+
+
+    @PostMapping("/show")
+    public R showDetail(@RequestBody User user){
+        Integer userId = user.getId();
+        UserDetails userDetail = userService.getUserDetail(userId);
+        return userDetail!=null?R.success(userDetail):R.error(CODE_404,"系统出现异常");
+    }
+
+
+
+
 
 
     /**
@@ -82,17 +105,7 @@ public class RegistrationAuditController {
 
         return userService.getRegistryUser(admin, name, number, enable,create_time, classId, currentPage, pageSize);
     }
-
-     /**
-     * @param
-     * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 新增学生信息
-     * @author 15754
-     * @Date 2023/4/24
-     */
-
-
-
+    
     /**
      *
      *
@@ -100,5 +113,6 @@ public class RegistrationAuditController {
      *  导出初测信息      /export
      *
      */
+
 
 }
