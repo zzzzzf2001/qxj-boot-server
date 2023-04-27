@@ -2,8 +2,10 @@ package com.qxj.qingxiaojiamaster.web.admin;
 
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
+import com.qxj.qingxiaojiamaster.entity.AllStudentInfo;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.service.AdminService;
+import com.qxj.qingxiaojiamaster.service.IAllStudentInfoService;
 import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,8 @@ public class UserManagementController {
     @Resource
     UserService userService;
 
+    @Resource
+    IAllStudentInfoService allStudentInfoService;
 
     /**
      * @param currentPage, pageSize
@@ -57,14 +61,14 @@ public class UserManagementController {
             @RequestParam(value = "classId", required = false) String[] classId,
             @RequestParam(value = "enable", required = false) String enable
     ) {
-        List<User> list = userService
+        List<AllStudentInfo> list = allStudentInfoService
                 .lambdaQuery()
-                .select(User.class, info -> !info.getColumn().equals("password"))
-                .like(MybatisUtil.condition(username), User::getName, username)
-                .like(MybatisUtil.condition(number), User::getNumber, number)
-                .like(MybatisUtil.condition(enable), User::getEnable, enable)
-                .in(MybatisUtil.condition(classId), User::getClassId, (Object[]) classId)
-                .orderBy(true, false, User::getCrateTime)
+                .select(AllStudentInfo.class, info -> !info.getColumn().equals("password"))
+                .like(MybatisUtil.condition(username), AllStudentInfo::getName, username)
+                .like(MybatisUtil.condition(number), AllStudentInfo::getNumber, number)
+                .like(MybatisUtil.condition(enable), AllStudentInfo::getEnable, enable)
+                .in(MybatisUtil.condition(classId), AllStudentInfo::getClass_name, (Object[]) classId)
+                .orderBy(true, false, AllStudentInfo::getCreateTime)
                 .last(MybatisUtil.limitPage(currentPage, pageSize))
                 .list();
         return R.success(list);
