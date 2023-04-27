@@ -67,7 +67,7 @@ public class UserManagementController {
                 .like(MybatisUtil.condition(username), AllStudentInfo::getName, username)
                 .like(MybatisUtil.condition(number), AllStudentInfo::getNumber, number)
                 .like(MybatisUtil.condition(enable), AllStudentInfo::getEnable, enable)
-                .in(MybatisUtil.condition(classId), AllStudentInfo::getClass_name, (Object[]) classId)
+                .in(MybatisUtil.condition(classId), AllStudentInfo::getClassName, (Object[]) classId)
                 .orderBy(true, false, AllStudentInfo::getCreateTime)
                 .last(MybatisUtil.limitPage(currentPage, pageSize))
                 .list();

@@ -7,7 +7,6 @@ package com.qxj.qingxiaojiamaster.model;
  **/
 
 
-import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.context.annotation.Bean;
@@ -38,6 +37,4 @@ public class PageParams {
         CurrentPage = currentPage;
         PageSize = pageSize;
     }
-
-
 }

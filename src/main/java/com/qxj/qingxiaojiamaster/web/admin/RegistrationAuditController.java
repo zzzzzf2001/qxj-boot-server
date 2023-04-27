@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static com.qxj.qingxiaojiamaster.common.Constants.*;
 
@@ -93,7 +92,9 @@ public class RegistrationAuditController {
 
 
 
+
         return R.success(userService.getRegistryUser(admin,name,number,enable,create_time,to_time,classId,currentPage,pageSize));
+
     }
 
     /**

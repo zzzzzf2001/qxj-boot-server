@@ -5,19 +5,22 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.common.R;
+
 import com.qxj.qingxiaojiamaster.entity.Admin;
+
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
+
 import com.qxj.qingxiaojiamaster.mapper.UserMapper;
 import com.qxj.qingxiaojiamaster.model.PageParams;
 import com.qxj.qingxiaojiamaster.model.PageResult;
 import com.qxj.qingxiaojiamaster.service.ClassService;
+
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
-import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +50,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Resource
     OrderService orderService;
-
 
 
 
@@ -101,6 +103,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             Integer orderId = orderStatus.getOrderId();
                 orderIds.add(orderId);
         }
+
         //创建参数页类
         PageParams pageParams = new PageParams();
 
@@ -111,6 +114,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         //将每页的条件封装到page对象中
         Page<Order> page = new Page<>(pageParams.getCurrentPage(),pageParams.getPageSize());
+
 
 
         //将假条ID条件封装到其中
@@ -128,25 +132,27 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return new PageResult<Order>(records,total,pageParams.getCurrentPage(),pageParams.getPageSize());
 
     }
-
-    @Override
-    public R selectOrderByTable(Admin admin, Integer classId, String userName, String userNumber, Integer status, LocalDateTime fromTime, LocalDateTime toTime, Integer currentPage, Integer pageSize) {
-//        List<User> users = userService.getRegistryUser(admin, userName, userNumber, status, null, null, classId, null, null);
-//        ArrayList<Integer> uids=new ArrayList<>();
-//
-//        for(User user:users){
-//            uids.add(user.getId());
-//        }
-//
-////        lambdaQuery().eq();
-//
-
-
-
-        return null;
-    }
-
 }
+
+
+//    @Override
+//    public R selectOrderByTable(Admin admin, Integer classId, String userName, String userNumber, Integer status, LocalDateTime fromTime, LocalDateTime toTime, Integer currentPage, Integer pageSize) {
+////        List<User> users = userService.getRegistryUser(admin, userName, userNumber, status, null, null, classId, null, null);
+////        ArrayList<Integer> uids=new ArrayList<>();
+////
+////        for(User user:users){
+////            uids.add(user.getId());
+////        }
+////
+//////        lambdaQuery().eq();
+////
+//
+//
+//
+//        return null;
+//    }
+
+
 
 
 

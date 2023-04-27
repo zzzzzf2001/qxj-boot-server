@@ -102,10 +102,10 @@ public class LeaveController {
      * @author 15754
      * @Date 2023/4/23
      */
-    @PostMapping("/showLeave/{status}")
+    @GetMapping("/showLeave/{status}")
     public R showOrder(@RequestBody User user,
-                       @RequestParam(value = "currentPage",required = false) Integer currentPage,
-                       @RequestParam(value = "pageSize",required = false) Integer pageSize,
+                       @RequestParam("currentPage") Integer currentPage,
+                       @RequestParam("pageSize") Integer pageSize,
                        @PathVariable(value = "status",required = false)  int status) {
         PageResult<Order> orderPageResult = orderService.selectOrderByStatus(user, currentPage, pageSize, status);
         return orderPageResult!=null? R.success(orderPageResult):R.error(CODE_200,"查询不到此状态假条，请重试");

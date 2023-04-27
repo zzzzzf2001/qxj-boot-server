@@ -45,7 +45,7 @@ public class AllStudentInfo implements Serializable {
     private String grade;
 
     @TableField("class")
-    private String class_name;
+    private String className;
 
     private String major;
 

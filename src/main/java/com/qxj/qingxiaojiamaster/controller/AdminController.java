@@ -56,13 +56,13 @@ public class AdminController {
             @RequestParam(value = "collegeId", required = false) String[] collegeId
     ) {
         List<Admin> admins = adminService.lambdaQuery()
-                .select(Admin.class, info -> info.getColumn().equals("password"))
+                .select(Admin.class, info -> !info.getColumn().equals("password"))
                 .like(MybatisUtil.condition(number), Admin::getNumber, number)
                 .like(MybatisUtil.condition(name), Admin::getName, name)
                 .like(MybatisUtil.condition(collegeId), Admin::getName, collegeId)
-                .last(MybatisUtil.limitPage(pageSize, currentPage))
+                .last(MybatisUtil.limitPage(currentPage, pageSize))
                 .list();
-        return R.success();
+        return R.success(admins);
     }
 
     /**
