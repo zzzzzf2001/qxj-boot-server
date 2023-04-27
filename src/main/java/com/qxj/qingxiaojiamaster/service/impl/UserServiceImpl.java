@@ -18,6 +18,7 @@ import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.LoginUtil;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 import com.qxj.qingxiaojiamaster.entity.Class;
 import javax.annotation.Resource;
@@ -88,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @Date 2023/4/24
      */
     @Override
-    public R getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time, Integer classId, Integer currentPage, Integer pageSize) {
+    public R getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time,LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
 
         LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
         //首先要将管理员ID放入条件查询器中
@@ -106,6 +107,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
              pageParams.setPageSize(pageSize);
              pageParams.setCurrentPage(currentPage);
          }
+         if (MybatisUtil.condition(create_time)&&!MybatisUtil.condition(totime)){
+             totime= LocalDateTime.now();
+         }
 
 
         List<User> list = userService.list(
@@ -116,10 +120,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                         .eq(MybatisUtil.condition(number),User::getNumber,number)
                         //查询是否可用
                         .eq(MybatisUtil.condition(enable), User::getEnable, enable)
-                        //查询创建时间
-                        .eq(MybatisUtil.condition(create_time), User::getCrateTime, create_time)
                         //若指定班级号，根据班级号查询
                         .eq(MybatisUtil.condition(classId), User::getClassId, classId)
+                        //指定用户创建时间的所在区间
+                        .between(MybatisUtil.condition(create_time)&&MybatisUtil.condition(totime),User::getCrateTime,create_time,totime)
                         //若未指定则直接按照该老师所管辖的班级ID搜索
                         .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
                         //按照创建时间排序

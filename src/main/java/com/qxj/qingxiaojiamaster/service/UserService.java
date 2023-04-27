@@ -22,7 +22,7 @@ public interface UserService extends IService<User> {
 
     User Login(User user);
 
-    R getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, Integer classId, Integer currentPage, Integer pageSize);
+    R getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time,LocalDateTime to_time, Integer classId, Integer currentPage, Integer pageSize);
 
     UserDetails getUserDetail(Integer userId);
 }

@@ -32,6 +32,7 @@ public class OrderStatus implements Serializable {
 
     @TableField("status")
     /**
+     * 被删除         0
      * 审核中        1
      * 审核通过      2
      * 审核未通过    3

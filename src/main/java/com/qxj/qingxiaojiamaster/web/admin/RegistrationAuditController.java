@@ -85,13 +85,14 @@ public class RegistrationAuditController {
                             @RequestParam(value = "number", required = false) String number,
                             @RequestParam(value = "enable", required = false) Integer enable,
                             @RequestParam(value = "create_table", required = false) LocalDateTime create_time,
+                            @RequestParam(value = "to_time", required = false) LocalDateTime to_time,
                             @RequestParam(value = "class_id", required = false) Integer classId,
                             @RequestParam(value = "currentPage", required = false) Integer currentPage,
                             @RequestParam(value = "pageSize", required = false) Integer pageSize
     ) {
 
 
-        return userService.getRegistryUser(admin, name, number, enable, create_time, classId, currentPage, pageSize);
+        return userService.getRegistryUser(admin, name, number, enable, create_time, to_time ,classId, currentPage, pageSize);
     }
 
     /**
