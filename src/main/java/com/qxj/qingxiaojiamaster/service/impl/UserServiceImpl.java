@@ -54,7 +54,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 
     @Resource
-    private  UserMapper userMapper;
+    private UserMapper userMapper;
 
     @Resource
     private OrderMapper orderMapper;
@@ -93,23 +93,49 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     public PageResult<User> getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
 
-        LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
-        //首先要将管理员ID放入条件查询器中
-        queryWrapper.eq(admin.getRole()==1,Class::getAdminId,admin.getId());
-        //查询出该管理员所管辖的班级
-        List<Class> classes = classMapper.selectList(queryWrapper);
+        LambdaQueryWrapper<Class> queryWrapper = new LambdaQueryWrapper<>();
+
+        ArrayList<Class> classes = new ArrayList<>();
+        //首先要将管理员ID放入条件查询器
+        //判断用户权限，若是是超级管理员
+
+        if(admin.getRole()==1) {
+            queryWrapper.ge(Class::getId, 0);
+            List<Class> classList = classMapper.selectList(queryWrapper);
+            classes.addAll(classList);
+        }
+        //若是普通管理员
+        else {
+            queryWrapper.eq(Class::getAdminId, admin.getId());
+            //查询出该管理员所管辖的班级
+            List<Class> classList = classMapper.selectList(queryWrapper);
+            classes.addAll(classList);
+        }
+
+
+        if (classes.size()==0){
+            throw new NormalException("查询不到该管理员的注册用户信息");
+        }
+
+
+
         //将管辖班级的ID全部取出
-        ArrayList<Integer> classIds=new ArrayList<>();
-        for (Class cl:classes){
+        ArrayList<Integer> classIds = new ArrayList<>();
+        for (Class cl : classes) {
             classIds.add(cl.getId());
         }
 
+
         PageParams pageParams = new PageParams();
         //判断curreage与pagesize是否为空（避免空指针异常），倘若有一个空则会直接走默认值
-        if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
+        if (MybatisUtil.condition(currentPage) && MybatisUtil.condition(pageSize)) {
             //二者皆为非空才可以设置值
             pageParams.setPageSize(pageSize);
             pageParams.setCurrentPage(currentPage);
+        }
+
+        if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(totime)) {
+            totime = LocalDateTime.now();
         }
 
 
@@ -129,7 +155,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 //按照创建时间排序
                 .orderBy(MybatisUtil.condition(create_time), false, User::getCrateTime);
 
-        Page<User> page = new Page<>(pageParams.getCurrentPage(),pageParams.getPageSize());
+        Page<User> page = new Page<>(pageParams.getCurrentPage(), pageParams.getPageSize());
 
         Page<User> userPage = userMapper.selectPage(page, userQueryWrapper);
 
@@ -137,25 +163,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         long total = userPage.getTotal();
 
-        return new PageResult<User>(records,total,pageParams.getCurrentPage(),pageParams.getPageSize());
-    }
-    public Page<User> toPage(Integer currentPage,Integer pageSize,List<User> list){
-        Page<User> page = new Page<>();
-        PageParams pageParams = new PageParams();
-         page.setCurrent(pageParams.getCurrentPage());
-         page.setSize(pageParams.getPageSize());
-         page.setTotal(list.size());
-         page.setRecords(list);
-         return  page;
+        return new PageResult<User>(records, total, pageParams.getCurrentPage(), pageParams.getPageSize());
     }
 
+    public Page<User> toPage(Integer currentPage, Integer pageSize, List<User> list) {
+        Page<User> page = new Page<>();
+        PageParams pageParams = new PageParams();
+        page.setCurrent(pageParams.getCurrentPage());
+        page.setSize(pageParams.getPageSize());
+        page.setTotal(list.size());
+        page.setRecords(list);
+        return page;
+    }
 
 
     @Override
     public UserDetails getUserDetail(Integer userId) {
-        UserDetails detail= userMapper.getDetailById(userId);
-        String picurl  = orderMapper.selectPicByUID(userId);
+        UserDetails detail = userMapper.getDetailById(userId);
+        String picurl = orderMapper.selectPicByUID(userId);
         detail.setOrderPicUrl(picurl);
         return detail;
     }
+
+
 }
