@@ -79,7 +79,7 @@ public class RegistrationAuditController {
      * @author 15754
      * @Date 2023/4/24
      */
-    @GetMapping("/select")
+    @PostMapping("/select")
     public R selectRegistry(@RequestBody Admin admin,
                             @RequestParam(value = "name", required = false) String name,
                             @RequestParam(value = "number", required = false) String number,
@@ -92,7 +92,7 @@ public class RegistrationAuditController {
     ) {
 
 
-        return userService.getRegistryUser(admin, name, number, enable, create_time, to_time ,classId, currentPage, pageSize);
+        return userService.getRegistryUser(admin, name, number, enable, create_time, to_time, classId, currentPage, pageSize);
     }
 
     /**
