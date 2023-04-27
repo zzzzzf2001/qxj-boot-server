@@ -2,16 +2,18 @@ package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Admin;
-import com.qxj.qingxiaojiamaster.entity.Class;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.mapper.UserMapper;
+import com.qxj.qingxiaojiamaster.model.PageParams;
+import com.qxj.qingxiaojiamaster.model.PageResult;
 import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
@@ -39,21 +41,14 @@ import java.util.List;
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
     @Resource
     OrderMapper orderMapper;
+
     @Resource
     OrderStatusService orderStatusService;
-    @Resource
-    OrderStatusMapper orderStatusMapper;
+
     @Resource
     OrderService orderService;
 
-    @Resource
-    UserService userService;
 
-    @Resource
-    UserMapper userMapper;
-
-    @Resource
-    ClassService classService;
 
 
     @Transactional
@@ -94,7 +89,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     @Override
-    public R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status) {
+    public PageResult<Order> selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status) {
         //利用条件查询其状态对象 参数为该用户的状态以及用户ID
         List<OrderStatus> list = orderStatusService.lambdaQuery()
                 .eq(OrderStatus::getUserId, user.getId())
@@ -104,31 +99,47 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<Integer> orderIds = new ArrayList<>();
         for (OrderStatus orderStatus : list) {
             Integer orderId = orderStatus.getOrderId();
-            if (!orderIds.contains(orderId))
                 orderIds.add(orderId);
         }
-        log.info(orderIds.toString());
-        //根据请假条ID查询假条集合
-        List<Order> orders = orderService.lambdaQuery()
-                .in(Order::getId, orderIds)
-                .list();
+        //创建参数页类
+        PageParams pageParams = new PageParams();
 
-        return R.success(orders);
+        if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
+            //二者皆为非空才可以设置值
+            pageParams.setPageSize(pageSize);
+            pageParams.setCurrentPage(currentPage);
+        }
+        //将每页的条件封装到page对象中
+        Page<Order> page = new Page<>(pageParams.getCurrentPage(),pageParams.getPageSize());
+
+
+        //将假条ID条件封装到其中
+        LambdaQueryWrapper<Order> orderQueryWrapper = new LambdaQueryWrapper<Order>()
+                .in(Order::getId, orderIds);
+    //根据页条件和假条条件查询页信息
+        Page<Order> orderPage = orderMapper.selectPage(page, orderQueryWrapper);
+
+        List<Order> records = orderPage.getRecords();
+
+        long total = orderPage.getTotal();
+
+
+
+        return new PageResult<Order>(records,total,pageParams.getCurrentPage(),pageParams.getPageSize());
 
     }
 
     @Override
     public R selectOrderByTable(Admin admin, Integer classId, String userName, String userNumber, Integer status, LocalDateTime fromTime, LocalDateTime toTime, Integer currentPage, Integer pageSize) {
-        List<User> users = userService.getRegistryUser(admin, userName, userNumber, status, null, null, classId, null, null);
-        ArrayList<Integer> uids=new ArrayList<>();
-
-        for(User user:users){
-            uids.add(user.getId());
-        }
-
-
-
-
+//        List<User> users = userService.getRegistryUser(admin, userName, userNumber, status, null, null, classId, null, null);
+//        ArrayList<Integer> uids=new ArrayList<>();
+//
+//        for(User user:users){
+//            uids.add(user.getId());
+//        }
+//
+////        lambdaQuery().eq();
+//
 
 
 

@@ -5,6 +5,7 @@ import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.model.PageResult;
 
 import java.time.LocalDateTime;
 
@@ -22,7 +23,7 @@ public interface OrderService extends IService<Order> {
 
     boolean setStatus(Order order, Integer userid);
 
-    R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
+    PageResult<Order> selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
 
 
     R selectOrderByTable(Admin admin, Integer classId, String userName, String userNumber, Integer status, LocalDateTime fromTime, LocalDateTime toTime,Integer currentPage,Integer pageSize );

@@ -1,4 +1,4 @@
-package com.qxj.qingxiaojiamaster.common;
+package com.qxj.qingxiaojiamaster.model;
 
 /**
  * @author : 15754

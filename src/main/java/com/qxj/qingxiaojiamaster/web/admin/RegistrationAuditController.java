@@ -14,8 +14,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static com.qxj.qingxiaojiamaster.common.Constants.CODE_404;
-import static com.qxj.qingxiaojiamaster.common.Constants.CODE_500;
+import static com.qxj.qingxiaojiamaster.common.Constants.*;
 
 /**
  * @author : 15754
@@ -47,7 +46,7 @@ public class RegistrationAuditController {
     public R showDetail(@RequestBody User user) {
         Integer userId = user.getId();
         UserDetails userDetail = userService.getUserDetail(userId);
-        return userDetail != null ? R.success(userDetail) : R.error(CODE_404, "系统出现异常");
+        return userDetail != null ? R.success(userDetail) : R.error(CODE_200, "系统出现异常");
     }
 
 
@@ -92,9 +91,9 @@ public class RegistrationAuditController {
                             @RequestParam(value = "pageSize", required = false) Integer pageSize
     ) {
 
-        List<User> registryUser = userService.getRegistryUser(admin, name, number, enable, create_time, to_time, classId, currentPage, pageSize);
 
-        return R.success(userService.toPage(currentPage,currentPage,registryUser));
+
+        return R.success(userService.getRegistryUser(admin,name,number,enable,create_time,to_time,classId,currentPage,pageSize));
     }
 
     /**

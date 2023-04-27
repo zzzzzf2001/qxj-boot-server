@@ -40,6 +40,14 @@ public class Admin implements Serializable {
 
     @TableField("college_id")
     private Integer collegeId;
+    /**
+     *  0:普通管理员
+    *   1:超级管理员
+     *
+    *
+    *
+    *
+    * */
 
     @TableField("role")
     private Integer role;

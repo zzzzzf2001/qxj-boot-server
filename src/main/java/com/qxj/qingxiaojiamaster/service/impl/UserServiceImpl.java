@@ -3,7 +3,8 @@ package com.qxj.qingxiaojiamaster.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qxj.qingxiaojiamaster.common.PageParams;
+import com.qxj.qingxiaojiamaster.model.PageResult;
+import com.qxj.qingxiaojiamaster.model.PageParams;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
@@ -43,8 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private ClassMapper classMapper;
     @Resource
     private UserService userService;
-    @Resource
-    private PageParams pageParams;
+
 
     @Resource
     private  UserMapper userMapper;
@@ -78,17 +78,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * @param admin,user,number,enable,create_time,classId,currentPage,pageSize
      * @return com.qxj.qingxiaojiamaster.entity.User
-     * @Description 用户登录获取信息
+     * @Description 用户注册获取信息
      * @author 15754
      * @Date 2023/4/24
      */
 
     @Override
-    public List<User> getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
+    public PageResult<User> getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
 
         LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
         //首先要将管理员ID放入条件查询器中
-        queryWrapper.eq(Class::getAdminId,admin.getId());
+        queryWrapper.eq(admin.getRole()==1,Class::getAdminId,admin.getId());
         //查询出该管理员所管辖的班级
         List<Class> classes = classMapper.selectList(queryWrapper);
         //将管辖班级的ID全部取出
@@ -100,37 +100,46 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
          if (MybatisUtil.condition(create_time)&&!MybatisUtil.condition(totime)){
              totime= LocalDateTime.now();
          }
-
-        List<User> list = userService.list(
-                new LambdaQueryWrapper<User>()
-                        //模糊查询姓名
-                        .like(MybatisUtil.condition(name), User::getName, name)
-                        //查询学号
-                        .eq(MybatisUtil.condition(number),User::getNumber,number)
-                        //查询是否可用
-                        .eq(MybatisUtil.condition(enable), User::getEnable, enable)
-                        //若指定班级号，根据班级号查询
-                        .eq(MybatisUtil.condition(classId), User::getClassId, classId)
-                        //指定用户创建时间的所在区间
-                        .between(MybatisUtil.condition(create_time)&&MybatisUtil.condition(totime),User::getCrateTime,create_time,totime)
-                        //若未指定则直接按照该老师所管辖的班级ID搜索
-                        .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
-                        //按照创建时间排序
-                        .orderBy(MybatisUtil.condition(create_time), false,User::getCrateTime)
-
-        );
-        return list;
-    }
-    public Page<User> toPage(Integer currentPage,Integer pageSize,List<User> list){
-        Page<User> page = new Page<>();
+        PageParams pageParams = new PageParams();
         //判断curreage与pagesize是否为空（避免空指针异常），倘若有一个空则会直接走默认值
         if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
             //二者皆为非空才可以设置值
             pageParams.setPageSize(pageSize);
             pageParams.setCurrentPage(currentPage);
         }
+
+
+        LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<User>()
+                //模糊查询姓名
+                .like(MybatisUtil.condition(name), User::getName, name)
+                //查询学号
+                .eq(MybatisUtil.condition(number), User::getNumber, number)
+                //查询是否可用
+                .eq(MybatisUtil.condition(enable), User::getEnable, enable)
+                //若指定班级号，根据班级号查询
+                .eq(MybatisUtil.condition(classId), User::getClassId, classId)
+                //指定用户创建时间的所在区间
+                .between(MybatisUtil.condition(create_time) && MybatisUtil.condition(totime), User::getCrateTime, create_time, totime)
+                //若未指定则直接按照该老师所管辖的班级ID搜索
+                .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
+                //按照创建时间排序
+                .orderBy(MybatisUtil.condition(create_time), false, User::getCrateTime);
+
+        Page<User> page = new Page<>(pageParams.getCurrentPage(),pageParams.getPageSize());
+
+        Page<User> userPage = userMapper.selectPage(page, userQueryWrapper);
+
+        List<User> records = userPage.getRecords();
+
+        long total = userPage.getTotal();
+
+        return new PageResult<User>(records,total,pageParams.getCurrentPage(),pageParams.getPageSize());
+    }
+    public Page<User> toPage(Integer currentPage,Integer pageSize,List<User> list){
+        Page<User> page = new Page<>();
+        PageParams pageParams = new PageParams();
          page.setCurrent(pageParams.getCurrentPage());
-         page.setSize(pageParams.getCurrentPage());
+         page.setSize(pageParams.getPageSize());
          page.setTotal(list.size());
          page.setRecords(list);
          return  page;

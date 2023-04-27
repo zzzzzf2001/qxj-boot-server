@@ -6,6 +6,7 @@ import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
+import com.qxj.qingxiaojiamaster.model.PageResult;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.qxj.qingxiaojiamaster.service.UserService;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_200;
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
 
 
@@ -105,8 +107,8 @@ public class LeaveController {
                        @RequestParam(value = "currentPage",required = false) Integer currentPage,
                        @RequestParam(value = "pageSize",required = false) Integer pageSize,
                        @PathVariable(value = "status",required = false)  int status) {
-
-        return orderService.selectOrderByStatus(user, currentPage, pageSize, status);
+        PageResult<Order> orderPageResult = orderService.selectOrderByStatus(user, currentPage, pageSize, status);
+        return orderPageResult!=null? R.success(orderPageResult):R.error(CODE_200,"查询不到此状态假条，请重试");
     }
 
     /**
