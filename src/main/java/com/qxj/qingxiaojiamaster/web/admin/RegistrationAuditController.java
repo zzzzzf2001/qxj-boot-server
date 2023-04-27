@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_404;
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_500;
@@ -79,7 +80,7 @@ public class RegistrationAuditController {
      * @author 15754
      * @Date 2023/4/24
      */
-    @GetMapping("/select")
+    @PostMapping("/select")
     public R selectRegistry(@RequestBody Admin admin,
                             @RequestParam(value = "name", required = false) String name,
                             @RequestParam(value = "number", required = false) String number,
@@ -91,8 +92,9 @@ public class RegistrationAuditController {
                             @RequestParam(value = "pageSize", required = false) Integer pageSize
     ) {
 
+        List<User> registryUser = userService.getRegistryUser(admin, name, number, enable, create_time, to_time, classId, currentPage, pageSize);
 
-        return userService.getRegistryUser(admin, name, number, enable, create_time, to_time ,classId, currentPage, pageSize);
+        return R.success(userService.toPage(currentPage,currentPage,registryUser));
     }
 
     /**

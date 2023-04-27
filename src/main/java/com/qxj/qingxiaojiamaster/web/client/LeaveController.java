@@ -100,10 +100,10 @@ public class LeaveController {
      * @author 15754
      * @Date 2023/4/23
      */
-    @GetMapping("/showLeave/{status}")
+    @PostMapping("/showLeave/{status}")
     public R showOrder(@RequestBody User user,
-                       @RequestParam("currentPage") Integer currentPage,
-                       @RequestParam("pageSize") Integer pageSize,
+                       @RequestParam(value = "currentPage",required = false) Integer currentPage,
+                       @RequestParam(value = "pageSize",required = false) Integer pageSize,
                        @PathVariable(value = "status",required = false)  int status) {
 
         return orderService.selectOrderByStatus(user, currentPage, pageSize, status);

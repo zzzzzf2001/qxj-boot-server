@@ -1,15 +1,21 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.common.R;
+import com.qxj.qingxiaojiamaster.entity.Admin;
+import com.qxj.qingxiaojiamaster.entity.Class;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
+import com.qxj.qingxiaojiamaster.mapper.UserMapper;
+import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
+import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,6 +45,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     OrderStatusMapper orderStatusMapper;
     @Resource
     OrderService orderService;
+
+    @Resource
+    UserService userService;
+
+    @Resource
+    UserMapper userMapper;
+
+    @Resource
+    ClassService classService;
 
 
     @Transactional
@@ -96,11 +111,28 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //根据请假条ID查询假条集合
         List<Order> orders = orderService.lambdaQuery()
                 .in(Order::getId, orderIds)
-                .last(MybatisUtil.limitPage(currentPage, pageSize))
                 .list();
 
         return R.success(orders);
 
+    }
+
+    @Override
+    public R selectOrderByTable(Admin admin, Integer classId, String userName, String userNumber, Integer status, LocalDateTime fromTime, LocalDateTime toTime, Integer currentPage, Integer pageSize) {
+        List<User> users = userService.getRegistryUser(admin, userName, userNumber, status, null, null, classId, null, null);
+        ArrayList<Integer> uids=new ArrayList<>();
+
+        for(User user:users){
+            uids.add(user.getId());
+        }
+
+
+
+
+
+
+
+        return null;
     }
 
 }

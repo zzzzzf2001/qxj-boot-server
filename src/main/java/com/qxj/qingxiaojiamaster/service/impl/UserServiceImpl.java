@@ -1,11 +1,9 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.common.PageParams;
-import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.User;
@@ -18,16 +16,12 @@ import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.LoginUtil;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 import com.qxj.qingxiaojiamaster.entity.Class;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-
-import static com.qxj.qingxiaojiamaster.common.Constants.CODE_404;
 
 /**
  * <p>
@@ -88,8 +82,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      * @author 15754
      * @Date 2023/4/24
      */
+
     @Override
-    public R getRegistryUser( Admin admin, String name, String number, Integer enable, LocalDateTime create_time,LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
+    public List<User> getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
 
         LambdaQueryWrapper<Class> queryWrapper=new LambdaQueryWrapper<>();
         //首先要将管理员ID放入条件查询器中
@@ -101,16 +96,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         for (Class cl:classes){
             classIds.add(cl.getId());
         }
-        //判断curreage与pagesize是否为空（避免空指针异常），倘若有一个空则会直接走默认值
-         if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
-             //二者皆为非空才可以设置值
-             pageParams.setPageSize(pageSize);
-             pageParams.setCurrentPage(currentPage);
-         }
+        //判断是否结束时间为空，若为空则设置为现在时间值
          if (MybatisUtil.condition(create_time)&&!MybatisUtil.condition(totime)){
              totime= LocalDateTime.now();
          }
-
 
         List<User> list = userService.list(
                 new LambdaQueryWrapper<User>()
@@ -128,11 +117,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                         .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
                         //按照创建时间排序
                         .orderBy(MybatisUtil.condition(create_time), false,User::getCrateTime)
-                        //分页查询默认第一页，一页10个
-                        .last(MybatisUtil.limitPage(pageParams.getCurrentPage(),pageParams.getPageSize())
-        ));
-        return list.size()>0? R.success(list): R.error(CODE_404,"暂未查询到您所管理的学生信息");
+
+        );
+        return list;
     }
+    public Page<User> toPage(Integer currentPage,Integer pageSize,List<User> list){
+        Page<User> page = new Page<>();
+        //判断curreage与pagesize是否为空（避免空指针异常），倘若有一个空则会直接走默认值
+        if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
+            //二者皆为非空才可以设置值
+            pageParams.setPageSize(pageSize);
+            pageParams.setCurrentPage(currentPage);
+        }
+         page.setCurrent(pageParams.getCurrentPage());
+         page.setSize(pageParams.getCurrentPage());
+         page.setTotal(list.size());
+         page.setRecords(list);
+         return  page;
+    }
+
+
+
 
     @Override
     public UserDetails getUserDetail(Integer userId) {
