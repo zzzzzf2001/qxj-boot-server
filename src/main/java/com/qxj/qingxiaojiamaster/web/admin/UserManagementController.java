@@ -1,9 +1,12 @@
 package com.qxj.qingxiaojiamaster.web.admin;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.AllStudentInfo;
 import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.mapper.AllStudentInfoMapper;
 import com.qxj.qingxiaojiamaster.service.AdminService;
 import com.qxj.qingxiaojiamaster.service.IAllStudentInfoService;
 import com.qxj.qingxiaojiamaster.service.UserService;
@@ -13,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
-import java.util.List;
 
 /**
  * @author : 15754
@@ -45,6 +47,10 @@ public class UserManagementController {
     @Resource
     IAllStudentInfoService allStudentInfoService;
 
+
+    @Resource
+    AllStudentInfoMapper allStudentInfoMapper;
+
     /**
      * @param currentPage, pageSize
      * @return com.qxj.qingxiaojiamaster.common.R
@@ -61,17 +67,15 @@ public class UserManagementController {
             @RequestParam(value = "classId", required = false) String[] classId,
             @RequestParam(value = "enable", required = false) String enable
     ) {
-        List<AllStudentInfo> list = allStudentInfoService
-                .lambdaQuery()
+        LambdaQueryWrapper<AllStudentInfo> wrapper = new LambdaQueryWrapper<AllStudentInfo>()
                 .select(AllStudentInfo.class, info -> !info.getColumn().equals("password"))
                 .like(MybatisUtil.condition(username), AllStudentInfo::getName, username)
                 .like(MybatisUtil.condition(number), AllStudentInfo::getNumber, number)
                 .like(MybatisUtil.condition(enable), AllStudentInfo::getEnable, enable)
                 .in(MybatisUtil.condition(classId), AllStudentInfo::getClassName, (Object[]) classId)
-                .orderBy(true, false, AllStudentInfo::getCreateTime)
-                .last(MybatisUtil.limitPage(currentPage, pageSize))
-                .list();
-        return R.success(list);
+                .orderBy(true, false, AllStudentInfo::getCreateTime);
+        Page<AllStudentInfo> allStudentInfoPage = allStudentInfoMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
+        return R.page(allStudentInfoPage.getTotal(), allStudentInfoPage.getRecords());
     }
 
     /**

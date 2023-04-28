@@ -1,16 +1,18 @@
 package com.qxj.qingxiaojiamaster.controller;
 
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
+import com.qxj.qingxiaojiamaster.mapper.AdminMapper;
 import com.qxj.qingxiaojiamaster.service.AdminService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * <p>
@@ -26,6 +28,8 @@ import java.util.List;
 public class AdminController {
     @Resource
     AdminService adminService;
+    @Resource
+    AdminMapper adminMapper;
 
     /**
      * @param admin
@@ -55,14 +59,13 @@ public class AdminController {
             @RequestParam(value = "name", required = false) String name,
             @RequestParam(value = "collegeId", required = false) String[] collegeId
     ) {
-        List<Admin> admins = adminService.lambdaQuery()
+        LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<Admin>()
                 .select(Admin.class, info -> !info.getColumn().equals("password"))
                 .like(MybatisUtil.condition(number), Admin::getNumber, number)
                 .like(MybatisUtil.condition(name), Admin::getName, name)
-                .like(MybatisUtil.condition(collegeId), Admin::getName, collegeId)
-                .last(MybatisUtil.limitPage(currentPage, pageSize))
-                .list();
-        return R.success(admins);
+                .like(MybatisUtil.condition(collegeId), Admin::getName, collegeId);
+        Page<Admin> pageResult = adminMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
+        return R.page(pageResult.getTotal(), pageResult.getRecords());
     }
 
     /**
