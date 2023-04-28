@@ -1,11 +1,10 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
-import com.qxj.qingxiaojiamaster.model.PageResult;
+import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.model.PageParams;
 
 import com.qxj.qingxiaojiamaster.config.NormalException;
@@ -20,16 +19,12 @@ import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.LoginUtil;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Service;
 import com.qxj.qingxiaojiamaster.entity.Class;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-
-import static com.qxj.qingxiaojiamaster.common.Constants.CODE_404;
 
 /**
  * <p>
@@ -91,7 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
 
-    public PageResult<User> getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
+    public R getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
 
         LambdaQueryWrapper<Class> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -112,11 +107,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             classes.addAll(classList);
         }
 
-
         if (classes.size()==0){
             throw new NormalException("查询不到该管理员的注册用户信息");
         }
-
 
 
         //将管辖班级的ID全部取出
@@ -163,18 +156,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         long total = userPage.getTotal();
 
-        return new PageResult<User>(records, total, pageParams.getCurrentPage(), pageParams.getPageSize());
+        return R.page(total,records);
     }
 
-    public Page<User> toPage(Integer currentPage, Integer pageSize, List<User> list) {
-        Page<User> page = new Page<>();
-        PageParams pageParams = new PageParams();
-        page.setCurrent(pageParams.getCurrentPage());
-        page.setSize(pageParams.getPageSize());
-        page.setTotal(list.size());
-        page.setRecords(list);
-        return page;
-    }
 
 
     @Override

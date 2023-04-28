@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.User;
-import com.qxj.qingxiaojiamaster.model.PageResult;
 
 /**
  * <p>
@@ -20,7 +19,7 @@ public interface OrderService extends IService<Order> {
 
     boolean setStatus(Order order, Integer userid);
 
-    PageResult<Order> selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
+    R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status);
 
 
 }

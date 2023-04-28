@@ -107,8 +107,8 @@ public class LeaveController {
                        @RequestParam("currentPage") Integer currentPage,
                        @RequestParam("pageSize") Integer pageSize,
                        @PathVariable(value = "status",required = false)  int status) {
-        PageResult<Order> orderPageResult = orderService.selectOrderByStatus(user, currentPage, pageSize, status);
-        return orderPageResult!=null? R.success(orderPageResult):R.error(CODE_200,"查询不到此状态假条，请重试");
+
+        return  orderService.selectOrderByStatus(user, currentPage, pageSize, status);
     }
 
     /**

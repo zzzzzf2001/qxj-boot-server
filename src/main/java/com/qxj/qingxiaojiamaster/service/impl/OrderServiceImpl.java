@@ -6,18 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.common.R;
 
-import com.qxj.qingxiaojiamaster.entity.Admin;
-
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
-import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 
-import com.qxj.qingxiaojiamaster.mapper.UserMapper;
 import com.qxj.qingxiaojiamaster.model.PageParams;
 import com.qxj.qingxiaojiamaster.model.PageResult;
-import com.qxj.qingxiaojiamaster.service.ClassService;
 
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
@@ -91,7 +86,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
     @Override
-    public PageResult<Order> selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status) {
+    public R selectOrderByStatus(User user, Integer currentPage, Integer pageSize, int status) {
         //利用条件查询其状态对象 参数为该用户的状态以及用户ID
         List<OrderStatus> list = orderStatusService.lambdaQuery()
                 .eq(OrderStatus::getUserId, user.getId())
@@ -129,7 +124,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
 
 
-        return new PageResult<Order>(records,total,pageParams.getCurrentPage(),pageParams.getPageSize());
+        return R.page(total,records);
 
     }
 }

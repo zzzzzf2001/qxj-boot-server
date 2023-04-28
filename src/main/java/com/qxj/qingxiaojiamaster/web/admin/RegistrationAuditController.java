@@ -93,7 +93,7 @@ public class RegistrationAuditController {
 
 
 
-        return R.success(userService.getRegistryUser(admin,name,number,enable,create_time,to_time,classId,currentPage,pageSize));
+        return userService.getRegistryUser(admin,name,number,enable,create_time,to_time,classId,currentPage,pageSize);
 
     }
 
