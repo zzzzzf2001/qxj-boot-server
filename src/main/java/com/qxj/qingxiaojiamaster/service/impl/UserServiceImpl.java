@@ -1,6 +1,7 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
@@ -21,6 +22,8 @@ import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import com.qxj.qingxiaojiamaster.entity.Class;
+
+
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -134,9 +137,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         LambdaQueryWrapper<User> userQueryWrapper = new LambdaQueryWrapper<User>()
                 //模糊查询姓名
-                .like(MybatisUtil.condition(name), User::getName, name)
+                .like(StringUtils.isNotEmpty(name), User::getName, name)
                 //查询学号
-                .eq(MybatisUtil.condition(number), User::getNumber, number)
+                .eq(StringUtils.isNotEmpty(number), User::getNumber, number)
                 //查询是否可用
                 .eq(MybatisUtil.condition(enable), User::getEnable, enable)
                 //若指定班级号，根据班级号查询
