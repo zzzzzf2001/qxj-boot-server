@@ -1,6 +1,7 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -52,13 +53,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     OrderService orderService;
 
-
-
     @Resource
     UserService userService;
 
     @Resource
     AllStudentInfoMapper allStudentInfoMapper;
+
+
+
+
 
     @Transactional
     @Override
@@ -69,7 +72,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         log.info(order.toString());
         boolean result1 = this.save(order);
         //判断是否保存成功
-        if (result1 == false) {
+        if (!result1) {
             return false;
         }
         return true;
@@ -89,8 +92,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderStatus.setUserId(userid);
         orderStatus.setCreateTime(LocalDateTime.now());
         orderStatus.setOrderId(order2.getId());
-        boolean result = orderStatusService.save(orderStatus);
-        return result;
+        return orderStatusService.save(orderStatus);
     }
 
 
@@ -179,7 +181,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         );
 
 
-        Integer total=OrderList.size(); //total
+        int total=OrderList.size(); //total
 
         List<OrderBaseDTO> orderBaseDTOList=new ArrayList<>();
         OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
@@ -201,6 +203,51 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
 
         return  R.page(total,orderBaseDTOList);
+    }
+
+    @Transactional
+    @Override
+    public R softDeleteOne(Integer id) {
+        try {
+            LambdaUpdateWrapper<OrderStatus> updateWrapper=new LambdaUpdateWrapper<OrderStatus>();
+            updateWrapper.eq(OrderStatus::getOrderId,id)
+                    .set(OrderStatus::getStatus,0);
+            boolean result = orderStatusService.update(updateWrapper);
+        }
+        catch (Exception e){
+            throw new NormalException();
+        }
+        return R.success();
+    }
+
+    @Override
+    public R softDeleteBatch(List<Integer> ids) {
+        try {
+        LambdaUpdateWrapper<OrderStatus> updateWrapper=new LambdaUpdateWrapper<OrderStatus>();
+        updateWrapper.in(OrderStatus::getOrderId,ids)
+                    .set(OrderStatus::getStatus,0);
+        orderStatusService.update(updateWrapper);
+    }
+        catch (Exception e){
+        throw new NormalException();
+    }
+        return R.success();
+    }
+
+    @Override
+    @Transactional
+    public R approvalOrder(Integer id, Integer agree) {
+        LambdaUpdateWrapper<OrderStatus> updateWrapper=new LambdaUpdateWrapper<>();
+        try {
+
+        updateWrapper.eq(OrderStatus::getOrderId,id)
+                .set(OrderStatus::getStatus,agree);
+         orderStatusService.update(updateWrapper);
+        }
+        catch (Exception e){
+            throw new NormalException();
+        }
+        return R.success();
     }
 }
 

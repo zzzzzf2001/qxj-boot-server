@@ -7,6 +7,7 @@ import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -27,4 +28,9 @@ public interface OrderService extends IService<Order> {
 
     R getOrderPage(Admin admin, String name, String number, Integer status, LocalDateTime createTime, LocalDateTime toTime, Integer classId, Integer currentPage, Integer pageSize);
 
+    R softDeleteOne(Integer id);
+
+    R softDeleteBatch(List<Integer> ids);
+
+    R approvalOrder(Integer id, Integer agree);
 }
