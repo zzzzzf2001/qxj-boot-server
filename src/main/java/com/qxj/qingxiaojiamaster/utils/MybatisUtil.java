@@ -1,7 +1,5 @@
 package com.qxj.qingxiaojiamaster.utils;
 
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -48,5 +46,16 @@ public class MybatisUtil {
      */
     public static boolean condition(Object object) {
         return !Objects.isNull(object);
+    }
+
+    /**
+     * @param array
+     * @return boolean
+     * @Description 判断Array数组是否为空
+     * @author hasdsd
+     * @Date 2023/5/5
+     */
+    public static boolean conditionArray(Object[] array) {
+        return array.length != 0;
     }
 }

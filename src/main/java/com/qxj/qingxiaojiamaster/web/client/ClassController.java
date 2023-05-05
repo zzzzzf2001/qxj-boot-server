@@ -9,12 +9,14 @@ import com.qxj.qingxiaojiamaster.service.CollegeService;
 import com.qxj.qingxiaojiamaster.service.GradeService;
 import com.qxj.qingxiaojiamaster.service.MajorService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +27,8 @@ import java.util.List;
  **/
 
 @RestController
-@RequestMapping("/menu")
+@RequestMapping("/class")
+@Slf4j
 public class ClassController {
 
     @Resource
@@ -36,7 +39,6 @@ public class ClassController {
     GradeService gradeService;
     @Resource
     MajorService majorService;
-    private List<Integer> majorIds;
 
     /**
      * @return com.qxj.qingxiaojiamaster.common.R
@@ -61,10 +63,11 @@ public class ClassController {
         return R.success(majorService.lambdaQuery().eq(Major::getCollegeId, collegeId).list());
     }
 
+
     /**
      * @param collegeId
      * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 根据专业获取年级
+     * @Description 根据学院获取年级
      * @author hasdsd
      * @Date 2023/4/24
      */
@@ -72,35 +75,36 @@ public class ClassController {
     public R getGradeByCollegeId(
             @RequestParam("collegeId") Integer collegeId
     ) {
-        gradeService.lambdaQuery().eq(MybatisUtil.condition(collegeId), Grade::getCollegeId, collegeId);
-        return R.success();
+        return R.success(gradeService.lambdaQuery().eq(MybatisUtil.condition(collegeId), Grade::getCollegeId, collegeId).list());
     }
 
 
     /**
      * @param majorId, classId, collegeId
      * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 查询班级
+     * @Description 查询班级信息
      * @author hasdsd
      * @Date 2023/4/24
      */
-    @GetMapping("/class")
+    @GetMapping()
     public R getClassByCollegeId(
-            @RequestParam("majorId") Integer[] majorId,
-            @RequestParam("classId") Integer[] classId,
-            @RequestParam("collegeId") Integer collegeId
+            @RequestParam(value = "collegeId", required = false) Integer[] collegeId,
+            @RequestParam(value = "majorId", required = false) Integer[] majorId,
+            @RequestParam(value = "gradeId", required = false) Integer[] gradeId,
+            @RequestParam(value = "classId", required = false) Integer[] classId
     ) {
+        ArrayList<Integer> allMajors = new ArrayList<>();
+        if (MybatisUtil.condition(majorId)) {
+            allMajors.addAll(Arrays.asList(majorId));
+        }
         //将collegeId转换为MajorId
         if (MybatisUtil.condition(collegeId)) {
-            majorIds = Arrays.asList(majorId);
-            List<Major> list = majorService.lambdaQuery().eq(Major::getCollegeId, collegeId).list();
-            for (Major major : list) {
-                majorIds.add(major.getId());
-            }
+            majorService.lambdaQuery().eq(Major::getCollegeId, collegeId).list().forEach(major -> allMajors.add(major.getId()));
         }
         List<Class> list = classService.lambdaQuery()
-                .in(Class::getMajorId, majorIds)
-                .in(Class::getClass)
+                .in(MybatisUtil.conditionArray(allMajors.toArray()), Class::getMajorId, allMajors)
+                .in(MybatisUtil.conditionArray(gradeId), Class::getGradeId, gradeId)
+                .in(MybatisUtil.conditionArray(classId), Class::getId, classId)
                 .list();
         return R.success(list);
     }
