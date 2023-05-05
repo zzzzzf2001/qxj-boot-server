@@ -86,8 +86,8 @@ public class ClassController {
      * @author hasdsd
      * @Date 2023/4/24
      */
-    @GetMapping()
-    public R getClassByCollegeId(
+    @GetMapping("/list")
+    public R getClassListByCollegeId(
             @RequestParam(value = "collegeId", required = false) Integer[] collegeId,
             @RequestParam(value = "majorId", required = false) Integer[] majorId,
             @RequestParam(value = "gradeId", required = false) Integer[] gradeId,
@@ -106,6 +106,24 @@ public class ClassController {
                 .in(MybatisUtil.conditionArray(gradeId), Class::getGradeId, gradeId)
                 .in(MybatisUtil.conditionArray(classId), Class::getId, classId)
                 .list();
+        return R.success(list);
+    }
+
+
+    /**
+     * @param majorId, classId, collegeId
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 查询班级信息
+     * @author hasdsd
+     * @Date 2023/4/24
+     */
+    @GetMapping()
+    public R getClassByCollegeId(
+            @RequestParam(value = "majorId", required = false) Integer majorId,
+            @RequestParam(value = "gradeId", required = false) Integer gradeId
+    ) {
+        List<Class> list = classService.lambdaQuery().eq(Class::getMajorId, majorId)
+                .eq(Class::getGradeId, gradeId).list();
         return R.success(list);
     }
 }
