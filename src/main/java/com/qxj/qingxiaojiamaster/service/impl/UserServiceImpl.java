@@ -89,7 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
 
-    public R getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
+    public R getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime to_time, Integer classId, Integer currentPage, Integer pageSize) {
 
         LambdaQueryWrapper<Class> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -122,16 +122,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
 
-        PageParams pageParams = new PageParams();
-        //判断curreage与pagesize是否为空（避免空指针异常），倘若有一个空则会直接走默认值
-        if (MybatisUtil.condition(currentPage) && MybatisUtil.condition(pageSize)) {
-            //二者皆为非空才可以设置值
-            pageParams.setPageSize(pageSize);
-            pageParams.setCurrentPage(currentPage);
-        }
 
-        if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(totime)) {
-            totime = LocalDateTime.now();
+
+        if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(to_time)) {
+            to_time = LocalDateTime.now();
         }
 
 
@@ -145,13 +139,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 //若指定班级号，根据班级号查询
                 .eq(MybatisUtil.condition(classId), User::getClassId, classId)
                 //指定用户创建时间的所在区间
-                .between(MybatisUtil.condition(create_time) && MybatisUtil.condition(totime), User::getCrateTime, create_time, totime)
+                .between(MybatisUtil.condition(create_time) , User::getCrateTime, create_time, to_time)
                 //若未指定则直接按照该老师所管辖的班级ID搜索
                 .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
                 //按照创建时间排序
                 .orderBy(MybatisUtil.condition(create_time), false, User::getCrateTime);
 
-        Page<User> page = new Page<>(pageParams.getCurrentPage(), pageParams.getPageSize());
+        Page<User> page = new Page<>();
+
+        if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
+            page.setCurrent(currentPage);
+            page.setPages(pageSize);
+        }
 
         Page<User> userPage = userMapper.selectPage(page, userQueryWrapper);
 

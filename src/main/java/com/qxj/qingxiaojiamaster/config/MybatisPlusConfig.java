@@ -1,4 +1,4 @@
-package com.qxj.qingxiaojiamaster.common;
+package com.qxj.qingxiaojiamaster.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
