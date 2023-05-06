@@ -57,13 +57,14 @@ public class AdminController {
             @RequestParam("currentPage") Integer currentPage,
             @RequestParam(value = "number", required = false) String number,
             @RequestParam(value = "name", required = false) String name,
-            @RequestParam(value = "collegeId", required = false) String[] collegeId
+            @RequestParam(value = "college", required = false) String college
     ) {
         LambdaQueryWrapper<Admin> wrapper = new LambdaQueryWrapper<Admin>()
                 .select(Admin.class, info -> !info.getColumn().equals("password"))
                 .like(MybatisUtil.condition(number), Admin::getNumber, number)
                 .like(MybatisUtil.condition(name), Admin::getName, name)
-                .like(MybatisUtil.condition(collegeId), Admin::getName, collegeId);
+                .like(MybatisUtil.condition(college), Admin::getName, college)
+                .orderByDesc(Admin::getId);
         Page<Admin> pageResult = adminMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         return R.page(pageResult.getTotal(), pageResult.getRecords());
     }
