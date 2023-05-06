@@ -64,7 +64,7 @@ public class UserManagementController {
             @RequestParam("pageSize") Integer pageSize,
             @RequestParam(value = "username", required = false) String username,
             @RequestParam(value = "number", required = false) String number,
-            @RequestParam(value = "classId", required = false) String[] classId,
+            @RequestParam(value = "className", required = false) String className,
             @RequestParam(value = "enable", required = false) String enable
     ) {
         LambdaQueryWrapper<AllStudentInfo> wrapper = new LambdaQueryWrapper<AllStudentInfo>()
@@ -72,7 +72,7 @@ public class UserManagementController {
                 .like(MybatisUtil.condition(username), AllStudentInfo::getName, username)
                 .like(MybatisUtil.condition(number), AllStudentInfo::getNumber, number)
                 .like(MybatisUtil.condition(enable), AllStudentInfo::getEnable, enable)
-                .in(MybatisUtil.condition(classId), AllStudentInfo::getClassName, (Object[]) classId)
+                .like(MybatisUtil.condition(className), AllStudentInfo::getClassName, className)
                 .orderBy(true, false, AllStudentInfo::getCreateTime);
         Page<AllStudentInfo> allStudentInfoPage = allStudentInfoMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         return R.page(allStudentInfoPage.getTotal(), allStudentInfoPage.getRecords());
