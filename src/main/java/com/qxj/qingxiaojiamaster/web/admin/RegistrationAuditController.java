@@ -13,7 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
-import static com.qxj.qingxiaojiamaster.common.Constants.*;
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_200;
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_500;
 
 /**
  * @author : 15754
@@ -89,12 +90,7 @@ public class RegistrationAuditController {
                             @RequestParam(value = "currentPage", required = false) Integer currentPage,
                             @RequestParam(value = "pageSize", required = false) Integer pageSize
     ) {
-
-
-
-
-        return userService.getRegistryUser(admin,name,number,enable,create_time,to_time,classId,currentPage,pageSize);
-
+        return userService.getRegistryUser(admin, name, number, enable, create_time, to_time, classId, currentPage, pageSize);
     }
 
     /**
