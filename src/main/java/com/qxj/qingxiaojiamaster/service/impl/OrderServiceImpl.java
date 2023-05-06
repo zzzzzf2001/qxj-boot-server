@@ -1,14 +1,18 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qxj.qingxiaojiamaster.common.R;
 
-import com.qxj.qingxiaojiamaster.entity.Order;
-import com.qxj.qingxiaojiamaster.entity.OrderStatus;
-import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.config.NormalException;
+import com.qxj.qingxiaojiamaster.entity.*;
+import com.qxj.qingxiaojiamaster.entity.Class;
+import com.qxj.qingxiaojiamaster.entity.dto.OrderBaseDTO;
+import com.qxj.qingxiaojiamaster.mapper.AllStudentInfoMapper;
+import com.qxj.qingxiaojiamaster.mapper.ClassMapper;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 
 import com.qxj.qingxiaojiamaster.model.PageParams;
@@ -16,8 +20,11 @@ import com.qxj.qingxiaojiamaster.model.PageResult;
 
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
+import com.qxj.qingxiaojiamaster.service.UserService;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.OS;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +53,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Resource
     OrderService orderService;
 
+    @Resource
+    UserService userService;
+
+    @Resource
+    AllStudentInfoMapper allStudentInfoMapper;
+
+
+
 
 
     @Transactional
@@ -57,7 +72,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         log.info(order.toString());
         boolean result1 = this.save(order);
         //判断是否保存成功
-        if (result1 == false) {
+        if (!result1) {
             return false;
         }
         return true;
@@ -77,8 +92,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         orderStatus.setUserId(userid);
         orderStatus.setCreateTime(LocalDateTime.now());
         orderStatus.setOrderId(order2.getId());
-        boolean result = orderStatusService.save(orderStatus);
-        return result;
+        return orderStatusService.save(orderStatus);
     }
 
 
@@ -127,25 +141,117 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return R.page(total,records);
 
     }
+
+    @Override
+    public R getOrderPage(Admin admin,String name, String number, Integer status, LocalDateTime create_time, LocalDateTime totime, Integer classId, Integer currentPage, Integer pageSize) {
+
+        R registryUser = userService.getRegistryUser(admin, name, number, null, null, null, classId, null, null);
+        List<User> userList = (List<User>) registryUser.getData();
+            List<Integer> ids = new ArrayList<>();
+        for (User user:userList){
+           Integer id= user.getId();
+            if (!ids.contains(id)){
+                ids.add(id);
+            }
+        }
+
+        if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(totime)) {
+            totime = LocalDateTime.now();
+        }
+
+        LambdaQueryWrapper<OrderStatus> OSqueryWrapper=new LambdaQueryWrapper<>();
+        OSqueryWrapper.eq(MybatisUtil.condition(status),OrderStatus::getStatus,status)
+                      .between(MybatisUtil.condition(create_time),OrderStatus::getCreateTime,create_time,totime)
+                .in(OrderStatus::getUserId,ids)
+        ;
+        List<OrderStatus> statusList = orderStatusService.list(OSqueryWrapper);
+
+        List<Integer> OrderIds=new ArrayList<>();
+        for(OrderStatus orderStatus:statusList){
+            OrderIds.add(orderStatus.getOrderId());
+        }
+        LambdaQueryWrapper<Order> orderLambdaQueryWrapper=new LambdaQueryWrapper<>();
+            orderLambdaQueryWrapper.in(Order::getId,OrderIds)
+                    .last(MybatisUtil.limitPage(currentPage,pageSize));
+            ;
+        List<Order> OrderList = orderService.list(orderLambdaQueryWrapper);
+
+        List<AllStudentInfo> allStudentInfos = allStudentInfoMapper.selectList(new LambdaQueryWrapper<AllStudentInfo>()
+                .in(AllStudentInfo::getStudentId, ids)
+        );
+
+
+        int total=OrderList.size(); //total
+
+        List<OrderBaseDTO> orderBaseDTOList=new ArrayList<>();
+        OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
+
+        for(Order order:OrderList){
+            BeanUtils.copyProperties(order,orderBaseDTO);
+            orderBaseDTOList.add(orderBaseDTO);
+        }
+
+        for(OrderBaseDTO orderBaseDTO1:orderBaseDTOList){
+            for(AllStudentInfo allStudentInfo:allStudentInfos ){
+                if (orderBaseDTO1.getUserId()==allStudentInfo.getStudentId()){
+                    orderBaseDTO1.setName(allStudentInfo.getName());
+                    orderBaseDTO1.setCollege(allStudentInfo.getCollege());
+                    orderBaseDTO1.setClassName(allStudentInfo.getClassName());
+                    orderBaseDTO1.setMajor(allStudentInfo.getMajor());
+                }
+            }
+        }
+
+        return  R.page(total,orderBaseDTOList);
+    }
+
+    @Transactional
+    @Override
+    public R softDeleteOne(Integer id) {
+        try {
+            LambdaUpdateWrapper<OrderStatus> updateWrapper=new LambdaUpdateWrapper<OrderStatus>();
+            updateWrapper.eq(OrderStatus::getOrderId,id)
+                    .set(OrderStatus::getStatus,0);
+            boolean result = orderStatusService.update(updateWrapper);
+        }
+        catch (Exception e){
+            throw new NormalException();
+        }
+        return R.success();
+    }
+
+    @Override
+    public R softDeleteBatch(List<Integer> ids) {
+        try {
+        LambdaUpdateWrapper<OrderStatus> updateWrapper=new LambdaUpdateWrapper<OrderStatus>();
+        updateWrapper.in(OrderStatus::getOrderId,ids)
+                    .set(OrderStatus::getStatus,0);
+        orderStatusService.update(updateWrapper);
+    }
+        catch (Exception e){
+        throw new NormalException();
+    }
+        return R.success();
+    }
+
+    @Override
+    @Transactional
+    public R approvalOrder(Integer id, Integer agree) {
+        LambdaUpdateWrapper<OrderStatus> updateWrapper=new LambdaUpdateWrapper<>();
+        try {
+
+        updateWrapper.eq(OrderStatus::getOrderId,id)
+                .set(OrderStatus::getStatus,agree);
+         orderStatusService.update(updateWrapper);
+        }
+        catch (Exception e){
+            throw new NormalException();
+        }
+        return R.success();
+    }
 }
 
 
-//    @Override
-//    public R selectOrderByTable(Admin admin, Integer classId, String userName, String userNumber, Integer status, LocalDateTime fromTime, LocalDateTime toTime, Integer currentPage, Integer pageSize) {
-////        List<User> users = userService.getRegistryUser(admin, userName, userNumber, status, null, null, classId, null, null);
-////        ArrayList<Integer> uids=new ArrayList<>();
-////
-////        for(User user:users){
-////            uids.add(user.getId());
-////        }
-////
-//////        lambdaQuery().eq();
-////
-//
-//
-//
-//        return null;
-//    }
 
 
 
