@@ -4,12 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
 import com.qxj.qingxiaojiamaster.common.R;
-import com.qxj.qingxiaojiamaster.model.PageParams;
-
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
+import com.qxj.qingxiaojiamaster.entity.Class;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.entity.dto.UserDetails;
 import com.qxj.qingxiaojiamaster.mapper.ClassMapper;
@@ -21,8 +19,6 @@ import com.qxj.qingxiaojiamaster.utils.LoginUtil;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import com.qxj.qingxiaojiamaster.entity.Class;
-
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -97,7 +93,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         //首先要将管理员ID放入条件查询器
         //判断用户权限，若是是超级管理员
 
-        if(admin.getRole()==1) {
+        if (admin.getRole() == 1) {
             queryWrapper.ge(Class::getId, 0);
             List<Class> classList = classMapper.selectList(queryWrapper);
             classes.addAll(classList);
@@ -110,7 +106,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             classes.addAll(classList);
         }
 
-        if (classes.size()==0){
+        if (classes.size() == 0) {
             throw new NormalException("查询不到该管理员的注册用户信息");
         }
 
@@ -120,8 +116,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         for (Class cl : classes) {
             classIds.add(cl.getId());
         }
-
-
 
 
         if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(to_time)) {
@@ -139,15 +133,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 //若指定班级号，根据班级号查询
                 .eq(MybatisUtil.condition(classId), User::getClassId, classId)
                 //指定用户创建时间的所在区间
-                .between(MybatisUtil.condition(create_time) , User::getCrateTime, create_time, to_time)
+                .between(MybatisUtil.condition(create_time), User::getCrateTime, create_time, to_time)
                 //若未指定则直接按照该老师所管辖的班级ID搜索
                 .in(!MybatisUtil.condition(classId), User::getClassId, classIds)
                 //按照创建时间排序
-                .orderBy(MybatisUtil.condition(create_time), false, User::getCrateTime);
+                .orderByDesc(User::getCrateTime);
 
         Page<User> page = new Page<>();
 
-        if (MybatisUtil.condition(currentPage)&&MybatisUtil.condition(pageSize)){
+        if (MybatisUtil.condition(currentPage) && MybatisUtil.condition(pageSize)) {
             page.setCurrent(currentPage);
             page.setPages(pageSize);
         }
@@ -158,9 +152,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         long total = userPage.getTotal();
 
-        return R.page(total,records);
+        return R.page(total, records);
     }
-
 
 
     @Override
