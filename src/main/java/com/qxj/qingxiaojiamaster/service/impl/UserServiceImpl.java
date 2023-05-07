@@ -24,6 +24,7 @@ import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * <p>
@@ -141,17 +142,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         Page<User> page = new Page<>();
 
-        if (MybatisUtil.condition(currentPage) && MybatisUtil.condition(pageSize)) {
-            page.setCurrent(currentPage);
-            page.setPages(pageSize);
+        if (Objects.isNull(currentPage) && Objects.isNull(pageSize)) {
+            page.setCurrent(1);
+            page.setSize(10000);
         }
+        else {
+            page.setCurrent(currentPage);
+            page.setSize(pageSize);
+        }
+        System.out.println("**********"+currentPage+"**********"+pageSize+"**********");
 
         Page<User> userPage = userMapper.selectPage(page, userQueryWrapper);
 
         List<User> records = userPage.getRecords();
-
         long total = userPage.getTotal();
-
         return R.page(total, records);
     }
 

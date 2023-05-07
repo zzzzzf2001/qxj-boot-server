@@ -131,6 +131,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         R registryUser = userService.getRegistryUser(admin, name, number, null, null, null, classId, null, null);
         List<User> userList = (List<User>) registryUser.getData();
+        log.info("-------****************--------------"+userList.toString());
         List<Integer> ids = new ArrayList<>();
         for (User user : userList) {
                 ids.add(user.getId());
@@ -138,7 +139,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         HashSet<Integer> set = new HashSet<>(ids);
         ids.clear();
         ids.addAll(set);
-
+        log.info("***********************"+ids.toString());
 
         if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(totime)) {
             totime = LocalDateTime.now();
@@ -147,8 +148,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         LambdaQueryWrapper<OrderStatus> OSqueryWrapper = new LambdaQueryWrapper<>();
         OSqueryWrapper.eq(MybatisUtil.condition(status), OrderStatus::getStatus, status)
                 .between(MybatisUtil.condition(create_time), OrderStatus::getCreateTime, create_time, totime)
-                .in(OrderStatus::getUserId, ids)
-        ;
+                .in(OrderStatus::getUserId, ids);
+
 
         List<OrderStatus> statusList = orderStatusService.list(OSqueryWrapper);
             if (statusList.isEmpty()){
