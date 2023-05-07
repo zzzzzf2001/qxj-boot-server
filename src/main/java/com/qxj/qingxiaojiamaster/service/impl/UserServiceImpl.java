@@ -85,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
 
-    public R getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime to_time, Integer classId, Integer currentPage, Integer pageSize) {
+    public R  getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime to_time, Integer classId, Integer currentPage, Integer pageSize) {
 
         LambdaQueryWrapper<Class> queryWrapper = new LambdaQueryWrapper<>();
 

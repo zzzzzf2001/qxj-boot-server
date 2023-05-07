@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
@@ -132,11 +133,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         List<User> userList = (List<User>) registryUser.getData();
         List<Integer> ids = new ArrayList<>();
         for (User user : userList) {
-            Integer id = user.getId();
-            if (!ids.contains(id)) {
-                ids.add(id);
-            }
+                ids.add(user.getId());
         }
+        HashSet<Integer> set = new HashSet<>(ids);
+        ids.clear();
+        ids.addAll(set);
+
 
         if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(totime)) {
             totime = LocalDateTime.now();
