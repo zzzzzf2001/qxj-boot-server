@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
+
 /**
  * <p>
  * 服务实现类
@@ -149,7 +151,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 .between(MybatisUtil.condition(create_time), OrderStatus::getCreateTime, create_time, totime)
                 .in(OrderStatus::getUserId, ids)
         ;
+
         List<OrderStatus> statusList = orderStatusService.list(OSqueryWrapper);
+            if (statusList.isEmpty()){
+                return R.error(CODE_400,"查询信息为空");
+            }
 
         List<Integer> OrderIds = new ArrayList<>();
         for (OrderStatus orderStatus : statusList) {
@@ -161,7 +167,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         ;
         List<Order> OrderList = orderService.list(orderLambdaQueryWrapper);
 
-        List<AllStudentInfo> allStudentInfos = allStudentInfoMapper.selectList(new LambdaQueryWrapper<AllStudentInfo>()
+        List<AllStudentInfo> allStudentInfos = allStudentInfoMapper.selectList(
+                new LambdaQueryWrapper<AllStudentInfo>()
                 .in(AllStudentInfo::getId, ids)
         );
 
