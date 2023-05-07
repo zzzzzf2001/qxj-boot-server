@@ -62,12 +62,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         //将请假表进行保存
         order.setUserId(userId);
         log.info(order.toString());
-        boolean result1 = this.save(order);
         //判断是否保存成功
-        if (!result1) {
-            return false;
-        }
-        return true;
+        return this.save(order);
     }
 
     @Override

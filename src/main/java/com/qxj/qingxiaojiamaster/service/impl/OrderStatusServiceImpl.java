@@ -4,6 +4,7 @@ import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -40,7 +41,7 @@ public class OrderStatusServiceImpl extends ServiceImpl<OrderStatusMapper, Order
 
     @Override
     public boolean haveCommit(int userId) {
-        List<OrderStatus> haveCommit = orderStatusMapper.haveCommit(userId);
-        return  haveCommit.size()>0? true : false;
+        OrderStatus haveCommit = orderStatusMapper.haveCommit(userId);
+        return MybatisUtil.condition(haveCommit);
     }
 }

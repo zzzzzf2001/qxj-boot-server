@@ -56,12 +56,12 @@ public class LeaveController {
      * @author 15754
      * @Date 2023/4/23
      */
-    @Transactional
+
     @PostMapping("/commit")
-    public R LeaveCommit(@RequestBody Order order, @RequestParam("userId") int userId) {
+    public R LeaveCommit(@RequestBody Order order,@RequestParam("userId") int userId) {
         order.setCreateTime(LocalDateTime.now());
         boolean haveCommit = orderStatusService.haveCommit(userId);
-        if (haveCommit==true) return R.error(CODE_400,"您已提交过请假信息了，请勿多次提交");
+        if (haveCommit) return R.error(CODE_400,"您已提交过请假信息了，请勿多次提交");
         try {
             orderService.LeaveCommit(order, userId);
 
