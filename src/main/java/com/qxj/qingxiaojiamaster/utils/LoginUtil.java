@@ -22,7 +22,7 @@ public class LoginUtil {
      */
     public static void checkAccount(String checkValue, String realValue) {
         if (!checkValue.equals(realValue)) {
-            throw new NormalException("账户名或密码错误");
+            throw new NormalException("账号不存在");
         }
 
     }
