@@ -17,5 +17,6 @@ public class OrderBaseDTO extends Order {
     private String college;
     private String className;
     private String name;
+    private Integer status;
 
 }

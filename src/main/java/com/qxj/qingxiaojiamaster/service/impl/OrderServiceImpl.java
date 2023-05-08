@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
 
@@ -121,7 +123,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         long total = orderPage.getTotal();
 
-
         return R.page(total, records);
 
     }
@@ -131,15 +132,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         R registryUser = userService.getRegistryUser(admin, name, number, null, null, null, classId, null, null);
         List<User> userList = (List<User>) registryUser.getData();
-        log.info("-------****************--------------"+userList.toString());
-        List<Integer> ids = new ArrayList<>();
-        for (User user : userList) {
-                ids.add(user.getId());
-        }
-        HashSet<Integer> set = new HashSet<>(ids);
-        ids.clear();
-        ids.addAll(set);
-        log.info("***********************"+ids.toString());
+        if (userList.isEmpty()) return R.success(userList);
+
+        List<Integer> ids = userList.stream().
+                map(User::getId).distinct().
+                collect(Collectors.toList());
+
 
         if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(totime)) {
             totime = LocalDateTime.now();
@@ -153,34 +151,45 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         List<OrderStatus> statusList = orderStatusService.list(OSqueryWrapper);
             if (statusList.isEmpty()){
-                return R.error(CODE_400,"查询信息为空");
+                return R.success("查询信息为空",statusList);
             }
 
-        List<Integer> OrderIds = new ArrayList<>();
-        for (OrderStatus orderStatus : statusList) {
-            OrderIds.add(orderStatus.getOrderId());
-        }
+
+        List<Integer> OrderIds = statusList.stream().
+                map(OrderStatus::getOrderId).
+                collect(Collectors.toList());
+
         LambdaQueryWrapper<Order> orderLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        orderLambdaQueryWrapper.in(Order::getId, OrderIds)
+        orderLambdaQueryWrapper.in(Order::getId,OrderIds)
                 .last(MybatisUtil.limitPage(currentPage, pageSize));
         ;
+
         List<Order> OrderList = orderService.list(orderLambdaQueryWrapper);
+
+        List<OrderBaseDTO> orderBaseDTOList = new ArrayList<>();
+
+
+        for(Order order:OrderList){
+            for(OrderStatus orderStatus : statusList){
+                if(Objects.equals(order.getId(), orderStatus.getOrderId())){
+                    OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
+                    BeanUtils.copyProperties(order, orderBaseDTO);
+                    orderBaseDTO.setStatus(orderStatus.getStatus());
+                    orderBaseDTOList.add(orderBaseDTO);
+                    continue;
+                }
+            }
+        }
+
+
 
         List<AllStudentInfo> allStudentInfos = allStudentInfoMapper.selectList(
                 new LambdaQueryWrapper<AllStudentInfo>()
                 .in(AllStudentInfo::getId, ids)
         );
 
-
         int total = OrderList.size(); //total
 
-        List<OrderBaseDTO> orderBaseDTOList = new ArrayList<>();
-        OrderBaseDTO orderBaseDTO = new OrderBaseDTO();
-
-        for (Order order : OrderList) {
-            BeanUtils.copyProperties(order, orderBaseDTO);
-            orderBaseDTOList.add(orderBaseDTO);
-        }
 
         for (OrderBaseDTO orderBaseDTO1 : orderBaseDTOList) {
             for (AllStudentInfo allStudentInfo : allStudentInfos) {
