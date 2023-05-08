@@ -27,17 +27,19 @@
     <select id="selectOtherUserInfo" resultType="java.util.Map" resultMap="detailsResultMap">
         select grade.name as grade, class.name as class, major.name as major, college.name as college
         from class,
-             grade,
-             major,
-             college
-        <where> class.id = #{classId}
-          and grade.id = class.grade_id
-          and major.id = class.major_id
-          and major.college_id = college.id
+        grade,
+        major,
+        college
+        <where>class.id = #{classId}
+            and grade.id = class.grade_id
+            and major.id = class.major_id
+            and major.college_id = college.id
         </where>
     </select>
     <select id="getDetailById" resultType="com.qxj.qingxiaojiamaster.entity.dto.UserDetails">
-        select * from  all_student_info where student_id=#{userId}
+        select *
+        from all_student_info
+        where id = #{userId}
     </select>
 
 </mapper>

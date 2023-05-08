@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.jmx.export.annotation.ManagedOperationParameter;
 
 import java.time.LocalDateTime;
 
@@ -25,7 +24,7 @@ import java.time.LocalDateTime;
 public class studentInfo {
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "student_id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
 
     @TableField("name")
@@ -54,14 +53,12 @@ public class studentInfo {
     private String remarks;
 
 
-
     /**
-     *用户状态是否可用
+     * 用户状态是否可用
      * 审批中：0
      * 正常可用：1
      * 审批拒绝：-1
-     *
-     * */
+     */
     @TableField("enable")
     private Integer enable;
 
