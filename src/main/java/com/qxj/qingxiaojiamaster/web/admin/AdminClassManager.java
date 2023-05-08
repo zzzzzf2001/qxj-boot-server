@@ -9,10 +9,7 @@ import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.CollegeService;
 import com.qxj.qingxiaojiamaster.service.GradeService;
 import com.qxj.qingxiaojiamaster.service.MajorService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -47,6 +44,35 @@ public class AdminClassManager {
     }
 
     /**
+     * @param collegeName, id
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 更新学院
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @PutMapping("/college")
+    public R updatesCollege(
+            @RequestParam("collegeName") String collegeName,
+            @RequestParam("id") Integer id
+    ) {
+        return R.success(collegeService.updateById(new College().builder().name(collegeName).id(id).build()));
+    }
+
+    /**
+     * @param id
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 删除学院
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @DeleteMapping("/college")
+    public R deleteCollege(
+            @RequestParam("id") Integer id
+    ) {
+        return R.success(collegeService.removeById(new College().builder().id(id).build()));
+    }
+
+    /**
      * @param collegeId, name
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 新增专业
@@ -60,6 +86,36 @@ public class AdminClassManager {
     ) {
         return R.success(majorService.save(new Major().builder().name(name).collegeId(collegeId).build()));
     }
+
+    /**
+     * @param id, name
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 更新专业
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @PutMapping("/major")
+    public R updateMajor(
+            @RequestParam("id") Integer id,
+            @RequestParam("name") String name
+    ) {
+        return R.success(majorService.updateById(new Major().builder().name(name).collegeId(id).build()));
+    }
+
+    /**
+     * @param id
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 删除专业
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @DeleteMapping("/major")
+    public R deleteMajor(
+            @RequestParam("id") Integer id
+    ) {
+        return R.success(majorService.removeById(new Major().builder().collegeId(id).build()));
+    }
+
 
     /**
      * @param collegeId, majorId, name
@@ -77,6 +133,7 @@ public class AdminClassManager {
         return R.success(gradeService.save(new Grade().builder().collegeId(collegeId).majorId(majorId).name(name).build()));
     }
 
+
     /**
      * @param gradeId, majorId, adminId, name
      * @return com.qxj.qingxiaojiamaster.common.R
@@ -92,6 +149,6 @@ public class AdminClassManager {
             @RequestParam("name") String name
     ) {
         return R.success(classService.save(new Class().builder()
-                .adminId(adminId).majorId(majorId).majorId(majorId).name(name).build()));
+                .adminId(adminId).majorId(majorId).gradeId(gradeId).name(name).build()));
     }
 }
