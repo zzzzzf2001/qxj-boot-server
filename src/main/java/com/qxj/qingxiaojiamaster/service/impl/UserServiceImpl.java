@@ -105,11 +105,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             //查询出该管理员所管辖的班级
             List<Class> classList = classMapper.selectList(queryWrapper);
             classes.addAll(classList);
+            if (classList.isEmpty()) return R.success(classList);
         }
 
-        if (classes.size() == 0) {
-            throw new NormalException("查询不到该管理员的注册用户信息");
-        }
 
 
         //将管辖班级的ID全部取出
@@ -149,7 +147,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             page.setCurrent(currentPage);
             page.setSize(pageSize);
         }
-        System.out.println("**********" + currentPage + "**********" + pageSize + "**********");
+
 
         Page<User> userPage = userMapper.selectPage(page, userQueryWrapper);
 
