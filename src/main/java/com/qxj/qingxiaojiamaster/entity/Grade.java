@@ -3,14 +3,16 @@ package com.qxj.qingxiaojiamaster.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author 张锋
@@ -33,5 +35,6 @@ public class Grade implements Serializable {
     @TableField("college_id")
     private Integer collegeId;
 
-
+    @TableField("major_id")
+    private Integer majorId;
 }

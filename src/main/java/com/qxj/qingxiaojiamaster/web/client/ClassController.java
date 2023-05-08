@@ -71,11 +71,26 @@ public class ClassController {
      * @author hasdsd
      * @Date 2023/4/24
      */
+    @Deprecated
     @GetMapping("/grade")
     public R getGradeByCollegeId(
             @RequestParam("collegeId") Integer collegeId
     ) {
-        return R.success(gradeService.lambdaQuery().eq(MybatisUtil.condition(collegeId), Grade::getCollegeId, collegeId).list());
+//        return R.success(gradeService.lambdaQuery().eq(MybatisUtil.condition(collegeId), Grade::getCollegeId, collegeId).list());
+        return R.success("接口过时");
+    }
+
+    @Deprecated
+    @GetMapping("/grade2")
+    public R getGradeByMajorId(
+            @RequestParam("majorId") Integer majorId,
+            @RequestParam("collegeId") Integer collegeId
+    ) {
+        return R.success(
+                gradeService.lambdaQuery()
+                        .eq(Grade::getMajorId, majorId)
+                        .eq(Grade::getCollegeId, collegeId)
+                        .list());
     }
 
 
