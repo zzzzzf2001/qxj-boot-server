@@ -23,7 +23,6 @@ public class AdminServiceImpl extends ServiceImpl<AdminMapper, Admin> implements
     public Admin Login(Admin admin) {
         Admin result = lambdaQuery()
                 .eq(Admin::getNumber, admin.getNumber())
-                .select(Admin.class, info -> !info.getColumn().equals("password"))
                 .one();
 
         if (result == null) {

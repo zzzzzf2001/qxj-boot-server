@@ -65,7 +65,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public User Login(User user) {
         //this指的是userService
         User result = this.lambdaQuery().eq(User::getNumber, user.getNumber()).one();
-        if (result == null) {
+        if (result.getId() == null) {
             throw new NormalException("账号不存在");
         }
         //检测是否正确
@@ -86,7 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
      */
     @Override
 
-    public R  getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime to_time, Integer classId, Integer currentPage, Integer pageSize) {
+    public R getRegistryUser(Admin admin, String name, String number, Integer enable, LocalDateTime create_time, LocalDateTime to_time, Integer classId, Integer currentPage, Integer pageSize) {
 
         LambdaQueryWrapper<Class> queryWrapper = new LambdaQueryWrapper<>();
 
@@ -145,12 +145,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (Objects.isNull(currentPage) && Objects.isNull(pageSize)) {
             page.setCurrent(1);
             page.setSize(10000);
-        }
-        else {
+        } else {
             page.setCurrent(currentPage);
             page.setSize(pageSize);
         }
-        System.out.println("**********"+currentPage+"**********"+pageSize+"**********");
+        System.out.println("**********" + currentPage + "**********" + pageSize + "**********");
 
         Page<User> userPage = userMapper.selectPage(page, userQueryWrapper);
 

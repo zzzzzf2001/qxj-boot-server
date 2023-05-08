@@ -33,7 +33,7 @@ public class UserController {
     /**
      * @param user
      * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description checkCheckQuestion
+     * @Description 用户登录
      * @author hasdsd
      * @Date 2023/4/22
      */

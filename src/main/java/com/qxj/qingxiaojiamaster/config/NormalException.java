@@ -31,6 +31,7 @@ public class NormalException extends RuntimeException {
      */
     public NormalException(String msg) {
         super(msg);
+        this.code = 500;
         this.Message = msg;// 这句不加不行
     }
 
