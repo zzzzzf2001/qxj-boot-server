@@ -70,6 +70,17 @@ public class AdminController {
     }
 
     /**
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 获取全部导员信息，用于新增班级
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @GetMapping("/getAllAdmin")
+    public R getAllAdmin() {
+        return R.success(adminService.lambdaQuery().select(Admin::getId, Admin::getName).list());
+    }
+
+    /**
      * @param admin
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 新增信息

@@ -99,7 +99,7 @@ public class AdminClassManager {
             @RequestParam("id") Integer id,
             @RequestParam("name") String name
     ) {
-        return R.success(majorService.updateById(new Major().builder().name(name).collegeId(id).build()));
+        return R.success(majorService.updateById(new Major().builder().name(name).id(id).build()));
     }
 
     /**
@@ -133,6 +133,35 @@ public class AdminClassManager {
         return R.success(gradeService.save(new Grade().builder().collegeId(collegeId).majorId(majorId).name(name).build()));
     }
 
+    /**
+     * @param id, name
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 更新年级
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @PutMapping("/grade")
+    public R upgradeGrade(
+            @RequestParam("id") Integer id,
+            @RequestParam("name") String name
+    ) {
+        return R.success(gradeService.updateById(new Grade().builder().id(id).name(name).build()));
+    }
+
+
+    /**
+     * @param id
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 删除年级
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @DeleteMapping("/grade")
+    public R deleteGrade(
+            @RequestParam("id") Integer id
+    ) {
+        return R.success(gradeService.removeById(new Grade().builder().id(id).build()));
+    }
 
     /**
      * @param gradeId, majorId, adminId, name
@@ -150,5 +179,36 @@ public class AdminClassManager {
     ) {
         return R.success(classService.save(new Class().builder()
                 .adminId(adminId).majorId(majorId).gradeId(gradeId).name(name).build()));
+    }
+
+    /**
+     * @param id, name
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 更新班级
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @PutMapping("/class")
+    public R putClass(
+            @RequestParam("id") Integer id,
+            @RequestParam("name") String name
+    ) {
+        return R.success(classService.updateById(new Class().builder()
+                .id(id).name(name).build()));
+    }
+
+    /***
+     * @param id
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description 删除班级
+     * @author hasdsd
+     * @Date 2023/5/9
+     */
+    @DeleteMapping("/class")
+    public R deleteClass(
+            @RequestParam("id") Integer id
+    ) {
+        return R.success(classService.removeById(new Class().builder()
+                .id(id).build()));
     }
 }
