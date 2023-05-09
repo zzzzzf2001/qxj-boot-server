@@ -44,7 +44,7 @@ public class AdminClassManager {
     }
 
     /**
-     * @param collegeName, id
+     * @param name, id
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 更新学院
      * @author hasdsd
@@ -52,10 +52,10 @@ public class AdminClassManager {
      */
     @PutMapping("/college")
     public R updatesCollege(
-            @RequestParam("collegeName") String collegeName,
+            @RequestParam("name") String name,
             @RequestParam("id") Integer id
     ) {
-        return R.success(collegeService.updateById(new College().builder().name(collegeName).id(id).build()));
+        return R.success(collegeService.updateById(new College().builder().name(name).id(id).build()));
     }
 
     /**
