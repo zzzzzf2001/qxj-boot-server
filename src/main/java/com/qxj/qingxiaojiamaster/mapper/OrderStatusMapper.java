@@ -26,4 +26,5 @@ public interface OrderStatusMapper extends BaseMapper<OrderStatus> {
     List<Integer> selectOrderidByStatus(int status);
 
     OrderStatus haveCommit(@Param("user_id") int userId);
+
 }

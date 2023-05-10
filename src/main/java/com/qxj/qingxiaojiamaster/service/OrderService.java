@@ -33,4 +33,6 @@ public interface OrderService extends IService<Order> {
     R softDeleteBatch(List<Integer> ids);
 
     R approvalOrder(Integer id, Integer agree);
+
+     List<Integer> hasExpire();
 }

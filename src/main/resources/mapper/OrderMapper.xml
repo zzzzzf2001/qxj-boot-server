@@ -20,6 +20,19 @@
     </select>
 
 
+
+    <select id="hasExpire" resultType="java.lang.Integer">
+        select o.id from qxj.`order` o, qxj.`order_status` os
+        where o.id=os.order_id
+        and
+        #{checkTime}>=o.create_time
+        and
+        os.status=1
+
+
+    </select>
+
+
 </mapper>
 
 

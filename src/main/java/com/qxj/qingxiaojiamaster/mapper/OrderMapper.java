@@ -6,6 +6,7 @@ import com.qxj.qingxiaojiamaster.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -21,4 +22,6 @@ import java.util.Map;
 public interface OrderMapper extends BaseMapper<Order> {
 
     String selectPicByUID(@Param("userId") Integer userId);
+
+    List<Integer> hasExpire(@Param("checkTime") LocalDateTime checkTime);
 }
