@@ -17,6 +17,11 @@
         <where> order_id = #{order_id};
         </where>
     </update>
+
+
+
+
+
     <select id="haveCommit" resultType="com.qxj.qingxiaojiamaster.entity.OrderStatus">
         select * from `order_status`
         <where>

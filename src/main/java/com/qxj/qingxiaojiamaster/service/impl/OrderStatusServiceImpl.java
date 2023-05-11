@@ -1,5 +1,6 @@
 package com.qxj.qingxiaojiamaster.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.qxj.qingxiaojiamaster.entity.OrderStatus;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
@@ -43,5 +44,14 @@ public class OrderStatusServiceImpl extends ServiceImpl<OrderStatusMapper, Order
     public boolean haveCommit(int userId) {
         OrderStatus haveCommit = orderStatusMapper.haveCommit(userId);
         return MybatisUtil.condition(haveCommit);
+    }
+
+    @Override
+    public boolean expireOrder(List<Integer> orderIds) {
+        LambdaUpdateWrapper<OrderStatus> set = new LambdaUpdateWrapper<OrderStatus>()
+                .eq(OrderStatus::getStatus, 1)
+                .in(OrderStatus::getOrderId, orderIds)
+                .set(OrderStatus::getStatus, 2);
+        return this.update(set);
     }
 }

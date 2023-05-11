@@ -24,12 +24,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
 
 /**
  * <p>
@@ -193,11 +190,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         for (OrderBaseDTO orderBaseDTO1 : orderBaseDTOList) {
             for (AllStudentInfo allStudentInfo : allStudentInfos) {
-                if (orderBaseDTO1.getUserId() == allStudentInfo.getId()) {
+                if (Objects.equals(orderBaseDTO1.getUserId(), allStudentInfo.getId())) {
                     orderBaseDTO1.setName(allStudentInfo.getName());
                     orderBaseDTO1.setCollege(allStudentInfo.getCollege());
                     orderBaseDTO1.setClassName(allStudentInfo.getClassName());
                     orderBaseDTO1.setMajor(allStudentInfo.getMajor());
+                    continue;
                 }
             }
         }
@@ -246,6 +244,21 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
         return R.success();
     }
+
+    @Override
+    public List<Integer> hasExpire() {
+        //当前时间为
+        LocalDateTime now  =LocalDateTime.now();
+        //当前时间的前一天时间为
+        LocalDateTime checkTime = now.minusDays(1);
+        //进行查询，如果假条时间超过该时间就说明该假条已过期
+
+
+        return orderMapper.hasExpire(checkTime);
+
+    }
+
+
 }
 
 
