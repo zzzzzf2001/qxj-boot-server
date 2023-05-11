@@ -40,8 +40,6 @@ public class RegistrationAuditController {
      * @author 15754
      * @Date 2023/4/26
      */
-
-
     @PostMapping("/show")
     public R showDetail(@RequestBody User user) {
         Integer userId = user.getId();

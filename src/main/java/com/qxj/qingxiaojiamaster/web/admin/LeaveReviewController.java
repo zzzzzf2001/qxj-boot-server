@@ -62,7 +62,7 @@ public class LeaveReviewController {
 
 
     /**
-     * @param id
+     * @param id 学生id
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 删除学生请假信息
      * @author 15754
@@ -86,7 +86,8 @@ public class LeaveReviewController {
     }
 
     /**
-     * @param id,agree
+     * @param id    订单id
+     * @param agree 状态id
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 审批假条
      * @author 15754

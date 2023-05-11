@@ -74,6 +74,18 @@ public class LeaveController {
         return R.success("添加成功");
     }
 
+    /**
+     * @param order 订单
+     * @return com.qxj.qingxiaojiamaster.common.R
+     * @Description updateOrder
+     * @author hasdsd
+     * @Date 2023/5/11
+     */
+    @PutMapping("/updates")
+    public R updateOrder(@RequestBody Order order) {
+        orderService.updateById(order);
+        return R.success();
+    }
 
     /**
      * @param id

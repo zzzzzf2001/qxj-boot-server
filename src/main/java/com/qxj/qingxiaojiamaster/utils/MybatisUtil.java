@@ -13,7 +13,8 @@ import java.util.Objects;
 public class MybatisUtil {
 
     /**
-     * @param currentPage, pageSize
+     * @param currentPage 当前页
+     * @param pageSize    页面大小
      * @return java.lang.String
      * @Description 分页
      * @author hasdsd
