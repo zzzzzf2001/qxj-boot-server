@@ -1,4 +1,4 @@
-package com.qxj.qingxiaojiamaster.web.client;
+package com.qxj.qingxiaojiamaster.web.admin;
 
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Class;
