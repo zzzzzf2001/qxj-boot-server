@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 
 /**
  * <p>
@@ -39,8 +41,13 @@ public class AdminController {
      * @Date 2023/4/22
      */
     @PostMapping("/login")
-    public R Login(@RequestBody Admin admin) {
+    public R Login(@RequestBody Admin admin, HttpServletRequest request) {
+
+        //声明map用于返回所有信息
+        HashMap<String, Object> map = new HashMap<>();
+
         Admin result = adminService.Login(admin);
+
         return R.success("登录成功", result);
     }
 

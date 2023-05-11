@@ -1,6 +1,7 @@
 package com.qxj.qingxiaojiamaster.web.client;
 
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Order;
@@ -9,12 +10,16 @@ import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.qxj.qingxiaojiamaster.service.UserService;
+import com.qxj.qingxiaojiamaster.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpRequest;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
 
@@ -56,11 +61,14 @@ public class LeaveController {
      */
 
     @PostMapping("/commit")
-    public R LeaveCommit(@RequestBody Order order) {
-        if (order.getUserId() == null) {
-            throw new NormalException("参数错误");
-        }
+    public R LeaveCommit(@RequestBody Order order, HttpServletRequest request) {
+        String token = request.getHeader("token");
+
+        Integer userid = Integer.valueOf(JWTUtils.getToken(token).getClaim("id").asString());
+
+        order.setUserId(userid);
         order.setCreateTime(LocalDateTime.now());
+
         boolean haveCommit = orderStatusService.haveCommit(order.getUserId());
         if (haveCommit) return R.error(CODE_400, "您已提交过请假信息了，请勿多次提交");
         try {
