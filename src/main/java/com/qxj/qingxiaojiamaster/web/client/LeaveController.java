@@ -6,7 +6,6 @@ import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Order;
 import com.qxj.qingxiaojiamaster.entity.User;
 import com.qxj.qingxiaojiamaster.mapper.OrderStatusMapper;
-import com.qxj.qingxiaojiamaster.model.PageResult;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.OrderStatusService;
 import com.qxj.qingxiaojiamaster.service.UserService;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
 
-import static com.qxj.qingxiaojiamaster.common.Constants.CODE_200;
 import static com.qxj.qingxiaojiamaster.common.Constants.CODE_400;
 
 
@@ -50,7 +48,7 @@ public class LeaveController {
  * **/
 
     /**
-     * @param order,user
+     * @param order
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 新建请假
      * @author 15754
@@ -58,18 +56,20 @@ public class LeaveController {
      */
 
     @PostMapping("/commit")
-    public R LeaveCommit(@RequestBody Order order,@RequestParam("userId") int userId) {
+    public R LeaveCommit(@RequestBody Order order) {
+        if (order.getUserId() == null) {
+            throw new NormalException("参数错误");
+        }
         order.setCreateTime(LocalDateTime.now());
-        boolean haveCommit = orderStatusService.haveCommit(userId);
-        if (haveCommit) return R.error(CODE_400,"您已提交过请假信息了，请勿多次提交");
+        boolean haveCommit = orderStatusService.haveCommit(order.getUserId());
+        if (haveCommit) return R.error(CODE_400, "您已提交过请假信息了，请勿多次提交");
         try {
-            orderService.LeaveCommit(order, userId);
+            orderService.LeaveCommit(order, order.getUserId());
 
         } catch (Exception e) {
             throw new NormalException("添加失败", e);
-        }
-        finally {
-            orderService.setStatus(order, userId);
+        } finally {
+            orderService.setStatus(order, order.getUserId());
         }
         return R.success("添加成功");
     }
@@ -106,9 +106,9 @@ public class LeaveController {
     public R showOrder(@RequestBody User user,
                        @RequestParam("currentPage") Integer currentPage,
                        @RequestParam("pageSize") Integer pageSize,
-                       @PathVariable(value = "status",required = false)  int status) {
+                       @PathVariable(value = "status", required = false) int status) {
 
-        return  orderService.selectOrderByStatus(user, currentPage, pageSize, status);
+        return orderService.selectOrderByStatus(user, currentPage, pageSize, status);
     }
 
     /**
