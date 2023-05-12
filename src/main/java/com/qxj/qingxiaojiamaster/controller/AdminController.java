@@ -83,8 +83,11 @@ public class AdminController {
      * @Date 2023/5/9
      */
     @GetMapping("/getAllAdmin")
-    public R getAllAdmin() {
-        return R.success(adminService.lambdaQuery().select(Admin::getId, Admin::getName).list());
+    public R getAllAdmin(@RequestParam(value = "collegeId", required = false) Integer collegeId) {
+        return R.success(adminService.lambdaQuery()
+                .select(Admin::getId, Admin::getName)
+                .eq(MybatisUtil.condition(collegeId), Admin::getCollege, collegeId)
+                .list());
     }
 
     /**

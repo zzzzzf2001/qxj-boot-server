@@ -191,10 +191,11 @@ public class AdminClassManager {
     @PutMapping("/class")
     public R putClass(
             @RequestParam("id") Integer id,
-            @RequestParam("name") String name
+            @RequestParam("name") String name,
+            @RequestParam("adminId") Integer adminId
     ) {
         return R.success(classService.updateById(new Class().builder()
-                .id(id).name(name).build()));
+                .id(id).name(name).adminId(adminId).build()));
     }
 
     /***
