@@ -42,4 +42,7 @@ public class Class implements Serializable {
     @TableField("admin_id")
     private Integer adminId;
 
+    //规范？什么规范？
+    @TableField(value = "admin_name", exist = false)
+    private String adminName;
 }

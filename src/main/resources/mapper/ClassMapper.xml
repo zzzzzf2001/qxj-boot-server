@@ -4,18 +4,26 @@
 
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.qxj.qingxiaojiamaster.entity.Class">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="grade_id" property="gradeId" />
-        <result column="major_id" property="majorId" />
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="grade_id" property="gradeId"/>
+        <result column="major_id" property="majorId"/>
         <result column="admin_id" property="adminId"/>
     </resultMap>
     <select id="getIdByAdminId" resultType="java.lang.Integer">
         select id from `class`
-    <where>
-        admin_id=#{adminId}
-    </where>
+        <where>
+            admin_id=#{adminId}
+        </where>
 
+    </select>
+    <select id="selectWithAdmin" resultType="com.qxj.qingxiaojiamaster.entity.Class">
+        select admin_id, admin.name as admin_name, class.name, class.grade_id, class.major_id, class.id
+        from admin,
+             class
+        where grade_id = #{gradeId}
+          and major_id = #{majorId}
+          and class.admin_id = admin.id
     </select>
 
 </mapper>

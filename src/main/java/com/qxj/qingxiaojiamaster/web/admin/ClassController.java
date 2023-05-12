@@ -4,6 +4,7 @@ import com.qxj.qingxiaojiamaster.common.R;
 import com.qxj.qingxiaojiamaster.entity.Class;
 import com.qxj.qingxiaojiamaster.entity.Grade;
 import com.qxj.qingxiaojiamaster.entity.Major;
+import com.qxj.qingxiaojiamaster.mapper.ClassMapper;
 import com.qxj.qingxiaojiamaster.service.ClassService;
 import com.qxj.qingxiaojiamaster.service.CollegeService;
 import com.qxj.qingxiaojiamaster.service.GradeService;
@@ -39,6 +40,9 @@ public class ClassController {
     GradeService gradeService;
     @Resource
     MajorService majorService;
+
+    @Resource
+    ClassMapper classMapper;
 
     /**
      * @return com.qxj.qingxiaojiamaster.common.R
@@ -137,8 +141,7 @@ public class ClassController {
             @RequestParam(value = "majorId", required = false) Integer majorId,
             @RequestParam(value = "gradeId", required = false) Integer gradeId
     ) {
-        List<Class> list = classService.lambdaQuery().eq(Class::getMajorId, majorId)
-                .eq(Class::getGradeId, gradeId).list();
+        List<Class> list = classMapper.selectWithAdmin(majorId, gradeId);
         return R.success(list);
     }
 }

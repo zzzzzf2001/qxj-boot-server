@@ -14,4 +14,5 @@
     <tree path="/src/main/java/com/qxj/qingxiaojiamaster/common/PageParams.java" title="页参数类" extension="java"/>
     <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/client/ClassController.java" title="班级管理"
           extension="java"/>
+    <tree path="/src/main/java/com/qxj/qingxiaojiamaster/web/admin/ClassController.java" title="班级管理"/>
 </trees>
