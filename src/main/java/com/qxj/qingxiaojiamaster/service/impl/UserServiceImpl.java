@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -111,10 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
 
         //将管辖班级的ID全部取出
-        ArrayList<Integer> classIds = new ArrayList<>();
-        for (Class cl : classes) {
-            classIds.add(cl.getId());
-        }
+        List<Integer> classIds = classes.stream().map(Class::getId).collect(Collectors.toList());
 
 
         if (MybatisUtil.condition(create_time) && !MybatisUtil.condition(to_time)) {
