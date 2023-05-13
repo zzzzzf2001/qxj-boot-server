@@ -87,7 +87,7 @@ public class AdminController {
                 .select(Admin.class, info -> !info.getColumn().equals("password"))
                 .like(MybatisUtil.condition(number), Admin::getNumber, number)
                 .like(MybatisUtil.condition(name), Admin::getName, name)
-                .like(MybatisUtil.condition(college), Admin::getName, college)
+                .like(MybatisUtil.condition(college), Admin::getCollege, college)
                 .orderByDesc(Admin::getId);
         Page<Admin> pageResult = adminMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         return R.page(pageResult.getTotal(), pageResult.getRecords());
@@ -100,8 +100,11 @@ public class AdminController {
      * @Date 2023/5/9
      */
     @GetMapping("/getAllAdmin")
-    public R getAllAdmin() {
-        return R.success(adminService.lambdaQuery().select(Admin::getId, Admin::getName).list());
+    public R getAllAdmin(@RequestParam(value = "collegeId", required = false) Integer collegeId) {
+        return R.success(adminService.lambdaQuery()
+                .select(Admin::getId, Admin::getName)
+                .eq(MybatisUtil.condition(collegeId), Admin::getCollege, collegeId)
+                .list());
     }
 
     /**

@@ -130,9 +130,10 @@ public class ClassController {
 
 
     /**
-     * @param majorId, classId, collegeId
+     * @param majorId 专业id
+     * @param gradeId 班级id
      * @return com.qxj.qingxiaojiamaster.common.R
-     * @Description 查询班级信息
+     * @Description 根据专业和年级查询导员信息
      * @author hasdsd
      * @Date 2023/4/24
      */
