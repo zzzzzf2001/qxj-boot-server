@@ -30,7 +30,7 @@ public class JWTUtils {
     public static String getToken(HashMap<String, String> map){
         //设置默认时间
         Calendar calendar= Calendar.getInstance();
-        calendar.add(Calendar.MINUTE,5);
+        calendar.add(Calendar.DATE,1);
         //创建JWT实例
         JWTCreator.Builder builder = JWT.create();
         //将Payload传入JWT实例中
