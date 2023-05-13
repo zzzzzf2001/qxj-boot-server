@@ -145,4 +145,9 @@ public class ClassController {
         List<Class> list = classMapper.selectWithAdmin(majorId, gradeId);
         return R.success(list);
     }
+
+
+
+
+
 }

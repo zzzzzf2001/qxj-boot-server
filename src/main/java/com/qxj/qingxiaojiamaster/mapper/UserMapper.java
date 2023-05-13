@@ -22,4 +22,6 @@ public interface UserMapper extends BaseMapper<User> {
    UserDetails getDetailById(@Param("userId") Integer id);
 
     Map<String, String> selectOtherUserInfo(@Param("classId") Integer id);
+
+    String selectPicByUID(@Param("userId") Integer userId);
 }

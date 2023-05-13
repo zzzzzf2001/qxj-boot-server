@@ -30,7 +30,6 @@ public class JWTInterceptor implements HandlerInterceptor {
                 //验证token
                 return true;
         }
-
         else {
             throw new NormalException(Integer.parseInt(CODE_499),"无token请重新登陆");
         }

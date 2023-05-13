@@ -15,13 +15,13 @@ import java.util.Collections;
 public class MyBatisPlusGenerator {
 
     // 表名
-    public static final String TABLE_NAME = "all_student_info";
+    public static final String TABLE_NAME = "ClassDetail";
     // 作者
-    public static final String AUTHOR = "hasdsd";
+    public static final String AUTHOR = "zzzzzf";
     //Mapper 路径
-    public static final String OUT_PUT_FILE = "D:/Code/qxj-boot-server/src/main/resources/mapper";
+    public static final String OUT_PUT_FILE = "D:/Code/JAVACode/qxj-boot123/src/main/resources/mapper";
     // 父级路径
-    public static final String PARENT_PATH = "D:/Code/qxj-boot-server/src/main/java";
+    public static final String PARENT_PATH = "D:/CodeJAVACode/qxj-boot123/src/main/java";
     // 父级包名
     public static final String PARENT_CLASS = "com.qxj.qingxiaojiamaster";
 

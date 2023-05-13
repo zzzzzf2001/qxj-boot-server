@@ -41,5 +41,9 @@
         from all_student_info
         where id = #{userId}
     </select>
+    <select id="selectPicByUID" parameterType="int" resultType="java.lang.String">
+        select picUrl  from `user`
+        where id=#{userId}
+    </select>
 
 </mapper>

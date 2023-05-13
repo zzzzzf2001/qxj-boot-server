@@ -2,6 +2,7 @@ package com.qxj.qingxiaojiamaster.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.qxj.qingxiaojiamaster.entity.Class;
+import com.qxj.qingxiaojiamaster.entity.dto.ClassDetails;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -21,4 +22,8 @@ public interface ClassMapper extends BaseMapper<Class> {
     List<Integer> getIdByAdminId(@Param("adminId") int adminId);
 
     List<Class> selectWithAdmin(@Param("majorId") Integer majorId, @Param("gradeId") Integer gradeId);
+
+    List<Class> selectclassByAdminId(@Param("adminId") Integer adminId);
+
+    List<ClassDetails> selectAll(Integer adminId);
 }

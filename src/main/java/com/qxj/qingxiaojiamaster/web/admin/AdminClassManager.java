@@ -1,17 +1,24 @@
 package com.qxj.qingxiaojiamaster.web.admin;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.qxj.qingxiaojiamaster.common.R;
+import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Class;
 import com.qxj.qingxiaojiamaster.entity.College;
 import com.qxj.qingxiaojiamaster.entity.Grade;
 import com.qxj.qingxiaojiamaster.entity.Major;
-import com.qxj.qingxiaojiamaster.service.ClassService;
-import com.qxj.qingxiaojiamaster.service.CollegeService;
-import com.qxj.qingxiaojiamaster.service.GradeService;
-import com.qxj.qingxiaojiamaster.service.MajorService;
+import com.qxj.qingxiaojiamaster.entity.dto.ClassDetails;
+import com.qxj.qingxiaojiamaster.mapper.ClassDetailMapper;
+import com.qxj.qingxiaojiamaster.service.*;
+import com.qxj.qingxiaojiamaster.utils.JWTUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+
+import java.util.List;
+
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_499;
 
 /**
  * @author : hasd
@@ -30,6 +37,10 @@ public class AdminClassManager {
     GradeService gradeService;
     @Resource
     ClassService classService;
+
+    @Resource
+    ClassDetailMapper classDetailMapper;
+
 
     /**
      * @param collegeName
@@ -212,4 +223,22 @@ public class AdminClassManager {
         return R.success(classService.removeById(new Class().builder()
                 .id(id).build()));
     }
+
+    @GetMapping("/showClassDetail")
+    public R showClassDetail(HttpServletRequest request){
+        String token = request.getHeader("token");
+        if (token==null){
+            throw new NormalException(Integer.valueOf(CODE_499),"token为空需重新登录");
+        }
+        Integer adminId = JWTUtils.getTokenDetail(token, "id", Integer.class);
+
+        List<ClassDetails> classDetailsList = classDetailMapper.selectList
+                (new LambdaQueryWrapper<ClassDetails>()
+                .eq(ClassDetails::getAdminId, adminId));
+
+        return R.success(classDetailsList);
+    }
+
+
+
 }

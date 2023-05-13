@@ -4,6 +4,7 @@ import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.entity.Class;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qxj.qingxiaojiamaster.entity.User;
+import com.qxj.qingxiaojiamaster.entity.dto.ClassDetails;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,4 +19,5 @@ import java.util.List;
  */
 public interface ClassService extends IService<Class> {
 
+    List<ClassDetails> getClassDetails(Integer adminId);
 }

@@ -158,8 +158,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public UserDetails getUserDetail(Integer userId) {
         UserDetails detail = userMapper.getDetailById(userId);
-        String picurl = orderMapper.selectPicByUID(userId);
-        detail.setOrderPicUrl(picurl);
+        String picUrl = userMapper.selectPicByUID(userId);
+        detail.setPicUrl(picUrl);
         return detail;
     }
 

@@ -70,5 +70,7 @@ public class User implements Serializable {
     @TableField("enable")
     private Integer enable;
 
+    @TableField("picUrl")
+    private String picUrl;
 
 }

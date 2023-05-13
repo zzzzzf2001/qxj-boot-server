@@ -35,8 +35,6 @@ public class JWTUtils {
         JWTCreator.Builder builder = JWT.create();
         //将Payload传入JWT实例中
         map.forEach(builder::withClaim);
-        //设置过期时间
-
         return builder.withExpiresAt(calendar.getTime()).sign(Algorithm.HMAC256(SIGN));
     }
     /**
@@ -57,5 +55,8 @@ public class JWTUtils {
      * */
     public static DecodedJWT  getToken(String token){
         return JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
+    }
+    public static <T> T getTokenDetail(String token,String claim,Class<T> T){
+        return getToken(token).getClaim(claim).as(T);
     }
 }

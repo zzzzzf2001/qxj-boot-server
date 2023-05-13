@@ -25,5 +25,14 @@
           and major_id = #{majorId}
           and class.admin_id = admin.id
     </select>
+    <select id="selectclassByAdminId" resultType="com.qxj.qingxiaojiamaster.entity.Class">
+        select *
+        from qxj.class
+        <where>
+            adminId=#{adminId}
+        </where>
+
+        ;
+    </select>
 
 </mapper>
