@@ -20,7 +20,11 @@ import static com.qxj.qingxiaojiamaster.common.Constants.CODE_499;
 public class JWTInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+
         String token = request.getHeader("token");  //从请求头中获取token
+        if (request.getMethod().equalsIgnoreCase("options")) {
+            return true;
+        }
         if(token!=null) {
                 JWTUtils.verify(token,response);
                 //验证token
@@ -30,5 +34,9 @@ public class JWTInterceptor implements HandlerInterceptor {
         else {
             throw new NormalException(Integer.parseInt(CODE_499),"无token请重新登陆");
         }
+
+        //放行options
+
+
     }
 }
