@@ -65,7 +65,7 @@ public class LeaveReviewController {
     ) {
         String token = request.getHeader("token");
         if(Objects.isNull(token)){
-            throw new NormalException(Integer.valueOf(CODE_499),"Token过期或不正确");
+            throw new NormalException(Integer.valueOf(CODE_499),"token过期或不可用");
         }
         String roleStr = JWTUtils.getToken(token).getClaim("role").asString();
         int role = Integer.parseInt(roleStr);

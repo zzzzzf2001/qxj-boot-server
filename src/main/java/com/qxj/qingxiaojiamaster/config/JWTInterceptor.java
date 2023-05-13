@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_499;
+
 /**
  * @author : 15754
  * @version 1.0.0
@@ -18,20 +20,15 @@ import java.util.HashMap;
 public class JWTInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        HashMap<String, Object> map = new HashMap<>();
         String token = request.getHeader("token");  //从请求头中获取token
-        try {
-            JWTUtils.verify(token);
-            //验证token
-            return  true;
+        if(token!=null) {
+                JWTUtils.verify(token,response);
+                //验证token
+                return true;
         }
-        catch (Exception e){
-            e.printStackTrace();
-            map.put("msg","Token验证不通过，请登录后重试 ");
+
+        else {
+            throw new NormalException(Integer.parseInt(CODE_499),"无token请重新登陆");
         }
-        map.put("state",false);
-        String json = new ObjectMapper().writeValueAsString(map); //将 map转为json
-        response.setContentType("application/json;charset=UTF-8"); //设置json格式
-        return  false;
     }
 }

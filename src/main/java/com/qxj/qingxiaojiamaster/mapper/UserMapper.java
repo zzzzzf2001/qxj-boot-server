@@ -19,7 +19,7 @@ import java.util.Map;
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
 
-  UserDetails getDetailById(@Param("userId") Integer id);
+   UserDetails getDetailById(@Param("userId") Integer id);
 
     Map<String, String> selectOtherUserInfo(@Param("classId") Integer id);
 }

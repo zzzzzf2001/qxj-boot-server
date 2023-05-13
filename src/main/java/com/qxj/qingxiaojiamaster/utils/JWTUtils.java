@@ -4,9 +4,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.qxj.qingxiaojiamaster.config.NormalException;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
+
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_499;
 
 /**
  * @author : 15754
@@ -37,8 +42,14 @@ public class JWTUtils {
     /**
      * 验证token
      * */
-    public static void verify(String token){
+    public static void verify(String token, HttpServletResponse response) throws IOException {
+        try{
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(SIGN)).build().verify(token);
+        }
+        catch (Exception e){
+            e.getStackTrace();
+            throw new NormalException(Integer.parseInt(CODE_499),"token验证不通过，请检查token是否正确或已过期");
+        }
     }
 
     /**
