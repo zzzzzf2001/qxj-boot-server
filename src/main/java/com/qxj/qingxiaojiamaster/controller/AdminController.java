@@ -35,7 +35,7 @@ public class AdminController {
     AdminMapper adminMapper;
 
     /**
-     * @param admin
+     * @param LoginAdmin
      * @return com.qxj.qingxiaojiamaster.common.R
      * @Description 管路员用户登录
      * @author hasdsd
@@ -49,18 +49,17 @@ public class AdminController {
             //登录获取用户
             Admin admin = adminService.Login(LoginAdmin);
             HashMap<String, String> payload = new HashMap<>();
-            payload.put("id",String.valueOf(admin.getId()));
-            payload.put("number",String.valueOf(admin.getNumber()));
-            payload.put("name",admin.getName());
+            payload.put("id", String.valueOf(admin.getId()));
+            payload.put("number", String.valueOf(admin.getNumber()));
+            payload.put("name", admin.getName());
             payload.put("role", String.valueOf(admin.getRole()));
             String token = JWTUtils.getToken(payload);
-            map.put("token",token);
-            map.put("state",true);
-            map.put("msg","登录成功");
-        }
-        catch (Exception e){
-            map.put("state",false);
-            map.put("msg",e.getCause());
+            map.put("token", token);
+            map.put("state", true);
+            map.put("msg", "登录成功");
+        } catch (Exception e) {
+            map.put("state", false);
+            map.put("msg", e.getCause());
             e.getStackTrace();
         }
 
