@@ -18,20 +18,23 @@ import java.util.HashMap;
 public class JWTInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        //放行options
+        if (request.getMethod().equalsIgnoreCase("options")) {
+            return true;
+        }
         HashMap<String, Object> map = new HashMap<>();
         String token = request.getHeader("token");  //从请求头中获取token
         try {
             JWTUtils.verify(token);
             //验证token
-            return  true;
-        }
-        catch (Exception e){
+            return true;
+        } catch (Exception e) {
             e.printStackTrace();
-            map.put("msg","Token验证不通过，请登录后重试 ");
+            map.put("msg", "Token验证不通过，请登录后重试 ");
         }
-        map.put("state",false);
+        map.put("state", false);
         String json = new ObjectMapper().writeValueAsString(map); //将 map转为json
         response.setContentType("application/json;charset=UTF-8"); //设置json格式
-        return  false;
+        return false;
     }
 }
