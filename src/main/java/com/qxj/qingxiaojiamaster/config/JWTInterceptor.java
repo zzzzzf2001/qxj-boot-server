@@ -27,7 +27,7 @@ public class JWTInterceptor implements HandlerInterceptor {
         }
         catch (Exception e){
             e.printStackTrace();
-            map.put("msg","Token验证不通过，请登录后重试");
+            map.put("msg","Token验证不通过，请登录后重试 ");
         }
         map.put("state",false);
         String json = new ObjectMapper().writeValueAsString(map); //将 map转为json

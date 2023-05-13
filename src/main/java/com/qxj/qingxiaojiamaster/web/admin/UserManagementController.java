@@ -28,16 +28,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RequestMapping("/admin/user")
 public class UserManagementController {
-    /**
-     * 搜索用户信息   /select (条件查询，分页查询)
-     * 新增用户信息   /add
-     * 导入用户信息   /import
-     * 导出用户信息   /export
-     * 修改用户信息   /modify
-     * 删除用户信息   /delete
-     * 重置用户信息   /reset
-     * 解绑微信号    /unbinding
-     */
+
     @Resource
     AdminService adminService;
 

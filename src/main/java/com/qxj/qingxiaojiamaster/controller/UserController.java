@@ -60,7 +60,6 @@ public class UserController {
             Map<String, String> otherUserInfo = userMapper.selectOtherUserInfo(userInfo.getId());
             map.put("userInfo", userInfo);
             map.put("details", otherUserInfo);
-            System.out.println(token);
         }
         catch (Exception e) {
             map.put("state",false);

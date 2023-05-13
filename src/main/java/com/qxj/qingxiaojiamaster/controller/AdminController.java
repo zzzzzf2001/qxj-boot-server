@@ -8,6 +8,7 @@ import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.mapper.AdminMapper;
 import com.qxj.qingxiaojiamaster.service.AdminService;
+import com.qxj.qingxiaojiamaster.utils.JWTUtils;
 import com.qxj.qingxiaojiamaster.utils.MybatisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -41,14 +42,30 @@ public class AdminController {
      * @Date 2023/4/22
      */
     @PostMapping("/login")
-    public R Login(@RequestBody Admin admin, HttpServletRequest request) {
-
+    public R Login(@RequestBody Admin LoginAdmin, HttpServletRequest request) {
         //声明map用于返回所有信息
         HashMap<String, Object> map = new HashMap<>();
+        try {
+            //登录获取用户
+            Admin admin = adminService.Login(LoginAdmin);
+            HashMap<String, String> payload = new HashMap<>();
+            payload.put("id",String.valueOf(admin.getId()));
+            payload.put("number",String.valueOf(admin.getNumber()));
+            payload.put("name",admin.getName());
+            payload.put("role", String.valueOf(admin.getRole()));
+            String token = JWTUtils.getToken(payload);
+            map.put("token",token);
+            map.put("state",true);
+            map.put("msg","登录成功");
+        }
+        catch (Exception e){
+            map.put("state",false);
+            map.put("msg",e.getCause());
+            e.getStackTrace();
+        }
 
-        Admin result = adminService.Login(admin);
 
-        return R.success("登录成功", result);
+        return R.success("登录成功", map);
     }
 
     /**

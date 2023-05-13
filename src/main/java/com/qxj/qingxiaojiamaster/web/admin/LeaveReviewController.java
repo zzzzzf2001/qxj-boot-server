@@ -1,16 +1,22 @@
 package com.qxj.qingxiaojiamaster.web.admin;
 
 import com.qxj.qingxiaojiamaster.common.R;
+import com.qxj.qingxiaojiamaster.config.NormalException;
 import com.qxj.qingxiaojiamaster.entity.Admin;
 import com.qxj.qingxiaojiamaster.mapper.OrderMapper;
 import com.qxj.qingxiaojiamaster.service.OrderService;
 import com.qxj.qingxiaojiamaster.service.UserService;
+import com.qxj.qingxiaojiamaster.utils.JWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+
+import static com.qxj.qingxiaojiamaster.common.Constants.CODE_499;
 
 /**
  * @author : 15754
@@ -54,9 +60,16 @@ public class LeaveReviewController {
             @RequestParam(value = "to_time", required = false) LocalDateTime to_time,
             @RequestParam(value = "class_id", required = false) Integer classId,
             @RequestParam(value = "currentPage", required = false) Integer currentPage,
-            @RequestParam(value = "pageSize", required = false) Integer pageSize
-
+            @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            HttpServletRequest request
     ) {
+        String token = request.getHeader("token");
+        if(Objects.isNull(token)){
+            throw new NormalException(Integer.valueOf(CODE_499),"Token过期或不正确");
+        }
+        String roleStr = JWTUtils.getToken(token).getClaim("role").asString();
+        int role = Integer.parseInt(roleStr);
+        admin.setRole(role);
         return orderService.getOrderPage(admin, name, number, status, create_time, to_time, classId, currentPage, pageSize);
     }
 
