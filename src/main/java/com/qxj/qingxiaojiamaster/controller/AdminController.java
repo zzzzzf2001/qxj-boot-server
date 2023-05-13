@@ -70,7 +70,7 @@ public class AdminController {
                 .select(Admin.class, info -> !info.getColumn().equals("password"))
                 .like(MybatisUtil.condition(number), Admin::getNumber, number)
                 .like(MybatisUtil.condition(name), Admin::getName, name)
-                .like(MybatisUtil.condition(college), Admin::getName, college)
+                .like(MybatisUtil.condition(college), Admin::getCollege, college)
                 .orderByDesc(Admin::getId);
         Page<Admin> pageResult = adminMapper.selectPage(new Page<>(currentPage, pageSize), wrapper);
         return R.page(pageResult.getTotal(), pageResult.getRecords());
